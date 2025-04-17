@@ -1,0 +1,14 @@
+[
+    {
+      "name": "Enercon E-82",
+      "ratedPower": 2300,
+      "rotorDiameter": 82,
+      "hubHeight": 138
+    },
+    {
+      "name": "Vestas V112",
+      "ratedPower": 3000,
+      "rotorDiameter": 112,
+      "hubHeight": 119
+    }
+  ]
