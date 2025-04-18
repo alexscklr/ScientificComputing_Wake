@@ -2,25 +2,18 @@ import React from 'react';
 import TurbineForm from './tabs/TurbineForm';
 import Toolbar from './tabs/Toolbar';
 import { Turbine } from '../types/Turbine';
-import { DefaultNull, TurbineTypesMap } from './TurbineList';
+import { DefaultNull } from './TurbineList';
 
 type SidebarProps = {
   mode: 'toolbar' | 'new' | 'edit';
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
-  activeTurbine?: Turbine | null;
-  onSave?: (data: Omit<Turbine, 'id'>) => void;
-  onCancel?: () => void;
+  activeTurbine: Turbine | null;
+  onSave: (data: Omit<Turbine, 'id'>) => void;
+  onCancel: () => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({
-    mode,
-    turbines,
-    setTurbines,
-    activeTurbine,
-    onSave,
-    onCancel
-  }) => {
+const Sidebar: React.FC<SidebarProps> = ({ mode, turbines, setTurbines, activeTurbine, onSave, onCancel }) => {
     // Leere Funktion für onSave im 'new' Modus
     const handleSave = (data: Omit<Turbine, 'id'>) => {
       if (onSave) {
@@ -29,9 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     };
   
     const handleCancel = () => {
-      if (onCancel) {
-        onCancel(); // Aufrufen der onCancel-Funktion, wenn sie existiert
-      }
+      onCancel();
     };
   
     return (

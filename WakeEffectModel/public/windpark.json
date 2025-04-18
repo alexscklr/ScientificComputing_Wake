@@ -1,16 +1,28 @@
 [
   {
-    "name": "WT1",
-    "type": "Enercon E-82",
-    "lat": 51.64247116288035,
-    "lon": 8.216271400451662,
+    "name": "TestWT1",
+    "lat": 51.64089985750661,
+    "long": 8.235197067260744,
+    "type": {
+      "name": "GE 1.5sle",
+      "hubHeight": 65,
+      "rotorDiameter": 77,
+      "ratedPower": 1500,
+      "yawControl": false
+    },
     "id": 1
   },
   {
-    "name": "Name1",
-    "type": "Standard 2MW",
-    "lat": 51.64074006068956,
-    "lon": 8.251676559448244,
+    "name": "Hi",
+    "lat": 51.64207168362518,
+    "long": 8.247728347778322,
+    "type": {
+      "name": "Enercon-E82",
+      "hubHeight": 78,
+      "rotorDiameter": 82,
+      "ratedPower": 2000,
+      "yawControl": true
+    },
     "id": 2
   }
 ]
