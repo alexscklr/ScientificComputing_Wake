@@ -1,9 +1,9 @@
 import React from 'react';
-import { WindTurbine } from '../TurbineList';
+import { Turbine } from '../../types/Turbine';
 
 type Props = {
-  turbines: WindTurbine[];
-  setTurbines: (t: WindTurbine[]) => void;
+  turbines: Turbine[];
+  setTurbines: (t: Turbine[]) => void;
 };
 
 const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {

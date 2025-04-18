@@ -1,37 +1,34 @@
-export interface WindTurbine {
-    id: number;
-    name: string;
-    type: string;
-    lat: number;
-    lon: number;
-    hubHeight?: number;
-    rotorDiameter?: number;
-    ratedPower?: number;
-    isRotatable?: boolean;
-  }
-  
-  export const initialTurbines: WindTurbine[] = [
-    {
-      id: 1,
-      name: 'Turbine 1',
-      type: 'Enercon E-82',
-      lat: 51.63922,
-      lon: 8.23592,
-      hubHeight: 78,
-      rotorDiameter: 82,
-      ratedPower: 2000,
-      isRotatable: true,
-    },
-    {
-      id: 2,
-      name: 'Turbine 2',
-      type: 'GE 1.5sle',
-      lat: 51.63458,
-      lon: 8.23186,
-      hubHeight: 65,
-      rotorDiameter: 77,
-      ratedPower: 1500,
-      isRotatable: false,
-    },
-  ];
-  
+import { TurbineType } from "../types/Turbine";
+
+export const EnerconE82 : TurbineType = {
+  name: 'Enercon-E82',
+  hubHeight: 78,
+  rotorDiameter: 82,
+  ratedPower: 2000,
+  yawControl: true
+};
+
+export const GE1p5sle : TurbineType = {
+  name: 'GE 1.5sle',
+  hubHeight: 65,
+  rotorDiameter: 77,
+  ratedPower: 1500,
+  yawControl: false
+};
+
+export const DefaultNull : TurbineType = {
+  name: 'DefaultNull',
+  hubHeight: 0,
+  rotorDiameter: 0,
+  ratedPower: 0,
+  yawControl: false
+}
+
+
+
+
+export const TurbineTypesMap: Record<string, TurbineType> = {
+  'DefaultNull' : DefaultNull,
+  'EnerconE82': EnerconE82,
+  'GE1.5sle': GE1p5sle
+};

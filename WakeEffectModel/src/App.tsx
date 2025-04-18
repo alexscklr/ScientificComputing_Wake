@@ -1,38 +1,59 @@
 import React, { useState } from 'react';
 import './App.css';
 import WindMap from './components/WindMap';
-import TurbineForm from './components/TurbineForm';
 import { Turbine } from './types/Turbine';
-import Toolbar from './components/Toolbar/Toolbar';
+import Sidebar from './components/Sidebar';
+import { DefaultNull, TurbineTypesMap } from './components/TurbineList';
 
 function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
-  const [newTurbineCoords, setNewTurbineCoords] = useState<{ lat: number, lon: number } | null>(null);
+  const [activeTurbine, setActiveTurbine] = useState<Turbine | null>(null); // Halte die aktive Turbine
+  const [mode, setMode] = useState<'toolbar' | 'new' | 'edit'>('toolbar'); // Aktuellen Modus der Sidebar
 
-  const handleMapClick = (lat: number, lon: number) => {
-    setNewTurbineCoords({ lat, lon }); // Öffne Formular
+  const handleMapClick = (lat: number, long: number) => {
+    // Setze die aktive Turbine auf null, wenn du in den 'new' Modus gehst
+    setActiveTurbine({ id: Date.now(), name: '', type: DefaultNull, lat, long });
+    setMode('new'); // Wechsel in den 'new' Modus
   };
 
-  const saveNewTurbine = (turbineData: Omit<Turbine, 'id'>) => {
-    const id = turbines.length + 1;
-    const newTurbine: Turbine = { ...turbineData, id };
+  const saveNewTurbine = (data: Omit<Turbine, 'id'>) => {
+    const newTurbine: Turbine = { ...data, id: turbines.length + 1 };
     setTurbines((prev) => [...prev, newTurbine]);
-    setNewTurbineCoords(null);
+    setMode('toolbar'); // Zurück zur Toolbar
+    setActiveTurbine(null); // Setze aktive Turbine zurück
   };
 
-  const cancelNewTurbine = () => {
-    setNewTurbineCoords(null);
+  const editTurbine = (id: number) => {
+    const turbineToEdit = turbines.find((turbine) => turbine.id === id);
+    if (turbineToEdit) {
+      setActiveTurbine(turbineToEdit);
+      setMode('edit'); // Wechsel in den 'edit' Modus
+    }
   };
 
-  const updateTurbinePosition = (id: number, lat: number, lon: number) => {
+  const cancelEdit = () => {
+    setActiveTurbine(null);
+    setMode('toolbar'); // Zurück zur Toolbar
+  };
+
+  const updateTurbine = (data: Omit<Turbine, 'id'>) => {
     setTurbines((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, lat, lon } : t))
+      prev.map((t) => (t.id === activeTurbine?.id ? { ...t, ...data } : t))
     );
+    setMode('toolbar');
+    setActiveTurbine(null);
   };
 
-  const deleteTurbine = (id: number) => {
-    setTurbines((prev) => prev.filter((t) => t.id !== id));
+  const dragTurbine = (id: number, lat: number, long: number) => {
+    setTurbines((prev) =>
+      prev.map((turbine) =>
+        turbine.id === id ? { ...turbine, lat: lat, long: long } : turbine
+      )
+    );
+    setMode('toolbar');
+    setActiveTurbine(null);
   };
+  
 
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
@@ -40,32 +61,24 @@ function App() {
       <div style={{ flex: 1 }}>
         <WindMap
           turbines={turbines}
-          onAddTurbine={(lat, lon) => handleMapClick(lat, lon)}
-          onUpdatePosition={updateTurbinePosition}
-          onDeleteTurbine={deleteTurbine}
+          activeTurbine={activeTurbine}
+          onAddTurbine={handleMapClick}
+          onEditTurbine={editTurbine} // Optional: zum Bearbeiten von Markern
+          onDragTurbine={dragTurbine}
         />
       </div>
-  
-      {/* Rechte Seite: Sidebar nur sichtbar bei Koordinaten */}
-      {newTurbineCoords && (
-        <div style={{
-          width: '300px',
-          backgroundColor: '#f9f9f9',
-          borderLeft: '1px solid #ccc',
-          padding: '1rem',
-        }}>
-          <TurbineForm
-            lat={newTurbineCoords.lat}
-            lon={newTurbineCoords.lon}
-            onSave={saveNewTurbine}
-            onCancel={cancelNewTurbine}
-          />
-        </div>
-      )}
-      <Toolbar turbines={turbines} setTurbines={setTurbines} />
+
+      {/* Rechte Seite: Sidebar */}
+      <Sidebar
+        mode={mode}
+        turbines={turbines}
+        setTurbines={setTurbines}
+        activeTurbine={activeTurbine}
+        onSave={mode === 'new' ? saveNewTurbine : updateTurbine}
+        onCancel={cancelEdit}
+      />
     </div>
   );
-  
 }
 
 export default App;
