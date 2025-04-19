@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Turbine } from '../../types/Turbine';
+import '../styles/Toolbar.css';
 
 type Props = {
   turbines: Turbine[];
@@ -7,7 +8,8 @@ type Props = {
 };
 
 const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
-  const exportToJson = () => {
+
+  const exportTurbines = () => {
     const dataStr = JSON.stringify(turbines, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -20,7 +22,7 @@ const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
     document.body.removeChild(link);
   };
 
-  const importFromJson = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importTurbines = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -40,14 +42,22 @@ const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
     reader.readAsText(file);
   };
 
+  
+  
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', margin: '1rem' }}>
-      <button onClick={exportToJson}>📤 Exportieren</button>
-      <label>
-        📥 Importieren:
-        <input type="file" accept="application/json" onChange={importFromJson} />
-      </label>
+    <div className="toolbar-container">
+      <div className="toolbar-section">
+        <h3>🌪️ Turbinen</h3>
+        <button onClick={exportTurbines}>📤 Exportieren</button>
+        <label>
+          📥 Importieren:
+          <input type="file" accept="application/json" onChange={importTurbines} />
+        </label>
+      </div>
     </div>
+
+
   );
 };
 

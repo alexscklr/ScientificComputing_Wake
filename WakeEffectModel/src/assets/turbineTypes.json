@@ -1,14 +1,72 @@
 [
-    {
-      "name": "Enercon E-82",
-      "ratedPower": 2300,
-      "rotorDiameter": 82,
-      "hubHeight": 138
-    },
-    {
-      "name": "Vestas V112",
-      "ratedPower": 3000,
-      "rotorDiameter": 112,
-      "hubHeight": 119
-    }
-  ]
+  {
+    "name": "DefaultNull",
+    "hubHeight": 0,
+    "rotorDiameter": 0,
+    "ratedPower": 0,
+    "yawControl": false
+  },
+  {
+    "name": "Enercon E-82",
+    "ratedPower": 2300,
+    "rotorDiameter": 82,
+    "hubHeight": 138,
+    "yawControl": true
+  },
+  {
+    "name": "GE 1.5sle",
+    "hubHeight": 65,
+    "rotorDiameter": 77,
+    "ratedPower": 1500,
+    "yawControl": false
+  },
+  {
+    "name": "Siemens Gamesa SG 4.5-132",
+    "ratedPower": 4500,
+    "rotorDiameter": 132,
+    "hubHeight": 120,
+    "yawControl": true
+  },
+  {
+    "name": "Nordex N60/1300",
+    "ratedPower": 1300,
+    "rotorDiameter": 60,
+    "hubHeight": 85,
+    "yawControl": false
+  },
+  {
+    "name": "Suzlon S66",
+    "ratedPower": 1500,
+    "rotorDiameter": 66,
+    "hubHeight": 90,
+    "yawControl": true
+  },
+  {
+    "name": "Vestas V90-3.0 MW",
+    "ratedPower": 3000,
+    "rotorDiameter": 90,
+    "hubHeight": 100,
+    "yawControl": true
+  },
+  {
+    "name": "Nordex N80/2500",
+    "ratedPower": 2500,
+    "rotorDiameter": 80,
+    "hubHeight": 100,
+    "yawControl": true
+  },
+  {
+    "name": "Repower MM82",
+    "ratedPower": 2200,
+    "rotorDiameter": 82,
+    "hubHeight": 100,
+    "yawControl": true
+  },
+  {
+    "name": "Siemens SWT-2.3-108",
+    "ratedPower": 2300,
+    "rotorDiameter": 108,
+    "hubHeight": 100,
+    "yawControl": true
+  }
+]

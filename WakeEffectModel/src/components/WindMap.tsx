@@ -1,25 +1,8 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Turbine } from '../types/Turbine';
-
-
-
-const dynamicColorIcon = (color: string) =>
-  L.divIcon({
-    className: '',
-    html: `<div style="
-      width: 20px;
-      height: 20px;
-      background-color: ${color};
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.3);
-    "></div>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
+import { windTurbineIcon } from './parts/WindMapMarker';
 
 
 
@@ -57,7 +40,7 @@ const WindMap: React.FC<WindMapProps> = ({ turbines, activeTurbine, onAddTurbine
         <Marker
           key={turbine.id}
           position={[turbine.lat, turbine.long]}
-          icon={turbine.id===activeTurbine?.id ? dynamicColorIcon('green') : dynamicColorIcon('red')}
+          icon={turbine.id===activeTurbine?.id ? windTurbineIcon('green') : windTurbineIcon('red')}
           draggable={true}
           eventHandlers={{
             dragend: (e) => {

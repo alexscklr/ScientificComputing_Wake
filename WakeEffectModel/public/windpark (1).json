@@ -1,0 +1,54 @@
+[
+  {
+    "name": "wt1",
+    "lat": 51.64143250949642,
+    "long": 8.233995437622072,
+    "type": {
+      "name": "GE 1.5sle",
+      "hubHeight": 65,
+      "rotorDiameter": 77,
+      "ratedPower": 1500,
+      "yawControl": false
+    },
+    "id": 1
+  },
+  {
+    "name": "wt2",
+    "lat": 51.64058026330942,
+    "long": 8.242406845092775,
+    "type": {
+      "name": "Enercon-E82",
+      "hubHeight": 78,
+      "rotorDiameter": 82,
+      "ratedPower": 2000,
+      "yawControl": true
+    },
+    "id": 2
+  },
+  {
+    "name": "wt3",
+    "lat": 51.638662650823875,
+    "long": 8.233523368835451,
+    "type": {
+      "name": "Enercon-E82",
+      "hubHeight": 78,
+      "rotorDiameter": 82,
+      "ratedPower": 2000,
+      "yawControl": true
+    },
+    "id": 3
+  },
+  {
+    "name": "wt4",
+    "lat": 51.64121944945131,
+    "long": 8.226227760314943,
+    "type": {
+      "name": "Enercon-E82",
+      "hubHeight": 78,
+      "rotorDiameter": 82,
+      "ratedPower": 2000,
+      "yawControl": true
+    },
+    "id": 4
+  }
+]

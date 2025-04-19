@@ -1,0 +1,44 @@
+/* Sidebar Container */
+.sidebar-container {
+    width: max(20vw, 300px);
+    border-left: 1px solid #ccc;
+    padding: 1rem;
+}
+
+.sidebar-btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert die Buttons in der Sidebar */
+    margin-bottom: 20px;
+  }
+  
+  /* Stil für die Buttons in der Sidebar */
+  .sidebar-button {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    margin: 1% 0;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 70%; /* Setzt die Breite der Buttons auf 80% der Sidebar-Breite */
+    text-align: center; /* Zentriert den Text im Button */
+    transition: all 0.3s;
+    display: block; /* Sorgt dafür, dass die Buttons als Block-Elemente angezeigt werden */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Hover-Effekt für die Buttons */
+  .sidebar-button:hover {
+    background-color: #2980b9;
+    width: 75%;
+  }
+  
+  /* Aktiver Button-Status (Für den aktuellen Modus) */
+  .sidebar-button.active {
+    background-color: #1abc9c;
+    width: 80%;
+  }
+  

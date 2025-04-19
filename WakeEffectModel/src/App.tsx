@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import './App.css';
 import WindMap from './components/WindMap';
-import { Turbine } from './types/Turbine';
+import { Turbine, TurbineType } from './types/Turbine';
 import Sidebar from './components/Sidebar';
-import { DefaultNull, TurbineTypesMap } from './components/TurbineList';
+import turbinesPresets from './assets/turbineTypes.json';
+import { useMode } from './hooks/useMode';
 
 function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
   const [activeTurbine, setActiveTurbine] = useState<Turbine | null>(null); // Halte die aktive Turbine
-  const [mode, setMode] = useState<'toolbar' | 'new' | 'edit'>('toolbar'); // Aktuellen Modus der Sidebar
+  const {mode, setMode} = useMode(); // Aktuellen Modus der Sidebar
 
   const handleMapClick = (lat: number, long: number) => {
     // Setze die aktive Turbine auf null, wenn du in den 'new' Modus gehst
-    setActiveTurbine({ id: Date.now(), name: '', type: DefaultNull, lat, long });
+    setActiveTurbine({ id: Date.now(), name: '', type: turbinesPresets.find((t: TurbineType) => t.name === "DefaultNull") || turbinesPresets[0], lat, long });
     setMode('new'); // Wechsel in den 'new' Modus
   };
 
@@ -70,7 +71,6 @@ function App() {
 
       {/* Rechte Seite: Sidebar */}
       <Sidebar
-        mode={mode}
         turbines={turbines}
         setTurbines={setTurbines}
         activeTurbine={activeTurbine}
