@@ -18,6 +18,9 @@
     color: #333;
 }
 
+.turbine-form-label.flexRow {
+    flex-direction: row;
+}
 
 
 .turbine-form-btn-container {
@@ -41,4 +44,11 @@
 
 .turbine-form-btn.cancel {
     background-color: #f44336;
+}
+
+.turbine-form-input {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
 }

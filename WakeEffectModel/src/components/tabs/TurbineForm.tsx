@@ -74,12 +74,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          style={{
-            padding: '0.6rem',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '1rem'
-          }}
+          className='turbine-form-input'
         />
       </label>
 
@@ -88,12 +83,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
         <select
           value={getKeyForType(formData.type)}
           onChange={handleTypeChange}
-          style={{
-            padding: '0.6rem',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '1rem'
-          }}
+          className='turbine-form-input'
         >
           {Object.entries(turbinePresets).map(([key, turbineType]) => (
             <option key={key} value={key}>
@@ -110,12 +100,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
           name="lat"
           value={formData.lat}
           onChange={handleInputChange}
-          style={{
-            padding: '0.6rem',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '1rem'
-          }}
+          className='turbine-form-input'
         />
       </label>
 
@@ -126,26 +111,18 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
           name="long"
           value={formData.long}
           onChange={handleInputChange}
-          style={{
-            padding: '0.6rem',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '1rem'
-          }}
+          className='turbine-form-input'
         />
       </label>
 
-      <label className='turbine-form-label'>
+      <label className='turbine-form-label flexRow'>
         Verfügbar:
         <input
           type="checkbox"
           name="available"
           checked={formData.available}
           onChange={handleInputChange}
-          style={{
-            padding: '0.6rem',
-            fontSize: '1rem'
-          }}
+          className='turbine-form-input'
         />
       </label>
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import TurbineForm from './tabs/TurbineForm';
 import Toolbar from './tabs/Toolbar';
-import { Turbine, TurbineType } from '../types/Turbine';
+import { Turbine } from '../types/Turbine';
 import turbinesPresets from './../assets/turbineTypes.json';
 import WindroseComponent from './tabs/WindRoseComp';
 import { Modes, useMode } from '../context/ModeContext';
