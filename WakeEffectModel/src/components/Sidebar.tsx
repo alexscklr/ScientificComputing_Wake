@@ -1,73 +1,103 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TurbineForm from './tabs/TurbineForm';
 import Toolbar from './tabs/Toolbar';
 import { Turbine, TurbineType } from '../types/Turbine';
 import turbinesPresets from './../assets/turbineTypes.json';
-import WindroseComponent from './WindRoseComp';
-import { useMode } from '../hooks/useMode';
+import WindroseComponent from './tabs/WindRoseComp';
+import { Modes, useMode } from '../context/ModeContext';
 import './styles/Sidebar.css';
+import CalculatePower from './tabs/CalculatePower';
+import { WindroseData } from '../types/WindRose';
+import { Point } from 'leaflet';
 
 type SidebarProps = {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
+  mapCenter: Point;
+  windroseData?: WindroseData;
+  setWindroseData: (wr: WindroseData) => void;
   activeTurbine: Turbine | null;
   onSave: (data: Omit<Turbine, 'id'>) => void;
   onCancel: () => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, activeTurbine, onSave, onCancel }) => {
+const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel }) => {
   const { mode, setMode } = useMode();
 
-  // Leere Funktion für onSave im 'new' Modus
   const handleSave = (data: Omit<Turbine, 'id'>) => {
     if (onSave) {
-      onSave(data); // Aufrufen der onSave-Funktion, wenn sie existiert
+      onSave(data);
     }
   };
 
   const handleCancel = () => {
     onCancel();
+    setMode(Modes.Toolbar);  // Setze den Modus auf Modes.Toolbar, wenn man auf 'Abbrechen' klickt
   };
 
+  useEffect(() => { }, [mode]);
+
   return (
-    <div className='sidebar-container'>
+    <div className="sidebar-container">
       <div className="sidebar-btn-container">
         <button
-          className={`sidebar-button ${mode === 'toolbar' ? 'active' : ''}`}
-          onClick={() => setMode('toolbar')}
+          className={`sidebar-button ${mode === Modes.Toolbar ? 'active' : ''}`}
+          onClick={() => setMode(Modes.Toolbar)}
         >
           Turbinen - Import/Export
         </button>
         <button
-          className={`sidebar-button ${mode === 'new' ? 'active' : ''}`}
-          onClick={() => setMode('new')}
+          className={`sidebar-button ${(mode === Modes.New || mode === Modes.Edit) ? 'active' : ''}`}
+          onClick={() => setMode(Modes.New)}
         >
           Neue Turbine
         </button>
         <button
-          className={`sidebar-button ${mode === 'windrose' ? 'active' : ''}`}
-          onClick={() => setMode('windrose')}
+          className={`sidebar-button ${mode === Modes.Windrose ? 'active' : ''}`}
+          onClick={() => setMode(Modes.Windrose)}
         >
           Windrose
         </button>
+        <button
+          className={`sidebar-button ${mode === Modes.Calculate ? 'active' : ''}`}
+          onClick={() => setMode(Modes.Calculate)}
+        >
+          Berechnen
+        </button>
       </div>
-      
-      {mode === 'toolbar' && (
-        <Toolbar turbines={turbines} setTurbines={setTurbines} />
-      )}
-      {(mode === 'new' || mode === 'edit') && (
-        <TurbineForm
-          lat={activeTurbine ? activeTurbine.lat : 0}
-          long={activeTurbine ? activeTurbine.long : 0}
-          name={activeTurbine ? activeTurbine.name : ''}
-          type={activeTurbine ? activeTurbine.type : turbinesPresets.find((t: TurbineType) => t.name === "DefaultNull") || turbinesPresets[0]}
-          onSave={mode === 'new' ? handleSave : onSave}  // Falls 'new' Modus, handleSave übergeben
-          onCancel={handleCancel}
-        />
-      )}
-      {mode === 'windrose' && <WindroseComponent />}
+      <div>
+        {mode === Modes.Toolbar && (
+          <Toolbar turbines={turbines} setTurbines={setTurbines} />
+        )}
+        {(mode === Modes.New || mode === Modes.Edit) && (
+          <TurbineForm
+            lat={activeTurbine ? activeTurbine.lat : mapCenter.x}
+            long={activeTurbine ? activeTurbine.long : mapCenter.y}
+            name={activeTurbine ? activeTurbine.name : `Wind Turbine ${turbines.length+1}`}
+            type={activeTurbine ? activeTurbine.type : turbinesPresets.find(t => t.name === 'DefaultNull')!}
+            available={activeTurbine ? activeTurbine.available : true}
+            onSave={mode === Modes.New ? handleSave : onSave}
+            onCancel={handleCancel}
+          />
+        )}
+        {mode === Modes.Windrose && (
+          <WindroseComponent 
+            windroseData={windroseData}
+            setWindroseData={setWindroseData}
+          />
+          )}
+        {mode === Modes.Calculate && (
+          <CalculatePower 
+            turbines={turbines}
+            setTurbines={setTurbines}
+            windrose={windroseData}
+            setWindrose={setWindroseData}
+          />
+        )}
+      </div>
     </div>
   );
 };
+
 
 export default Sidebar;

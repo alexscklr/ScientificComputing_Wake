@@ -1,54 +1,66 @@
 [
   {
-    "name": "wt1",
-    "lat": 51.64143250949642,
-    "long": 8.233995437622072,
+    "name": "",
+    "lat": 51.64042046536611,
+    "long": 8.235497474670412,
     "type": {
-      "name": "GE 1.5sle",
-      "hubHeight": 65,
-      "rotorDiameter": 77,
-      "ratedPower": 1500,
-      "yawControl": false
+      "name": "Enercon E-82",
+      "ratedPower": 2300,
+      "rotorDiameter": 82,
+      "hubHeight": 138,
+      "yawControl": true,
+      "powerCurve": [
+        {
+          "windSpeed": 0,
+          "power": 0
+        },
+        {
+          "windSpeed": 3,
+          "power": 0
+        },
+        {
+          "windSpeed": 6,
+          "power": 500
+        },
+        {
+          "windSpeed": 10,
+          "power": 2000
+        },
+        {
+          "windSpeed": 12,
+          "power": 2300
+        },
+        {
+          "windSpeed": 25,
+          "power": 2300
+        }
+      ],
+      "thrustCurve": [
+        {
+          "windSpeed": 0,
+          "thrust": 0
+        },
+        {
+          "windSpeed": 6,
+          "thrust": 0.25
+        },
+        {
+          "windSpeed": 10,
+          "thrust": 0.35
+        },
+        {
+          "windSpeed": 15,
+          "thrust": 0.45
+        },
+        {
+          "windSpeed": 25,
+          "thrust": 0.55
+        }
+      ],
+      "cutIn": 3,
+      "cutOut": 25
     },
+    "available": true,
     "id": 1
-  },
-  {
-    "name": "wt2",
-    "lat": 51.64058026330942,
-    "long": 8.242406845092775,
-    "type": {
-      "name": "Enercon-E82",
-      "hubHeight": 78,
-      "rotorDiameter": 82,
-      "ratedPower": 2000,
-      "yawControl": true
-    },
-    "id": 2
-  },
-  {
-    "name": "wt3",
-    "lat": 51.638662650823875,
-    "long": 8.233523368835451,
-    "type": {
-      "name": "Enercon-E82",
-      "hubHeight": 78,
-      "rotorDiameter": 82,
-      "ratedPower": 2000,
-      "yawControl": true
-    },
-    "id": 3
-  },
-  {
-    "name": "wt4",
-    "lat": 51.64121944945131,
-    "long": 8.226227760314943,
-    "type": {
-      "name": "Enercon-E82",
-      "hubHeight": 78,
-      "rotorDiameter": 82,
-      "ratedPower": 2000,
-      "yawControl": true
-    },
-    "id": 4
   }
 ]

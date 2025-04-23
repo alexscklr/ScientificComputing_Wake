@@ -4,69 +4,233 @@
     "hubHeight": 0,
     "rotorDiameter": 0,
     "ratedPower": 0,
-    "yawControl": false
+    "yawControl": false,
+    "powerCurve": [],
+    "thrustCoefficientCurve": [],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Enercon E-82",
     "ratedPower": 2300,
     "rotorDiameter": 82,
     "hubHeight": 138,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 2.5, "power": 12 },
+      { "windSpeed": 3, "power": 25 },
+      { "windSpeed": 4, "power": 82 },
+      { "windSpeed": 5, "power": 174 },
+      { "windSpeed": 6, "power": 321 },
+      { "windSpeed": 7, "power": 532 },
+      { "windSpeed": 8, "power": 815 },
+      { "windSpeed": 9, "power": 1180 },
+      { "windSpeed": 10, "power": 1580 },
+      { "windSpeed": 14, "power": 2350 },
+      { "windSpeed": 25, "power": 2350 },
+      { "windSpeed": 26, "power": 0 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.25 },
+      { "windSpeed": 10, "thrust": 0.35 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.55 }
+    ],
+    "cutIn": 2,
+    "cutOut": 25
   },
   {
     "name": "GE 1.5sle",
     "hubHeight": 65,
     "rotorDiameter": 77,
     "ratedPower": 1500,
-    "yawControl": false
+    "yawControl": false,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 500 },
+      { "windSpeed": 10, "power": 1500 },
+      { "windSpeed": 12, "power": 1500 },
+      { "windSpeed": 25, "power": 1500 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.5 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Siemens Gamesa SG 4.5-132",
     "ratedPower": 4500,
     "rotorDiameter": 132,
     "hubHeight": 120,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 1000 },
+      { "windSpeed": 10, "power": 4000 },
+      { "windSpeed": 12, "power": 4500 },
+      { "windSpeed": 25, "power": 4500 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.35 },
+      { "windSpeed": 10, "thrust": 0.45 },
+      { "windSpeed": 15, "thrust": 0.5 },
+      { "windSpeed": 25, "thrust": 0.6 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Nordex N60/1300",
     "ratedPower": 1300,
     "rotorDiameter": 60,
     "hubHeight": 85,
-    "yawControl": false
+    "yawControl": false,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 400 },
+      { "windSpeed": 10, "power": 1300 },
+      { "windSpeed": 12, "power": 1300 },
+      { "windSpeed": 25, "power": 1300 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.2 },
+      { "windSpeed": 10, "thrust": 0.3 },
+      { "windSpeed": 15, "thrust": 0.35 },
+      { "windSpeed": 25, "thrust": 0.4 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Suzlon S66",
     "ratedPower": 1500,
     "rotorDiameter": 66,
     "hubHeight": 90,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 500 },
+      { "windSpeed": 10, "power": 1500 },
+      { "windSpeed": 12, "power": 1500 },
+      { "windSpeed": 25, "power": 1500 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.5 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Vestas V90-3.0 MW",
     "ratedPower": 3000,
     "rotorDiameter": 90,
     "hubHeight": 100,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 1000 },
+      { "windSpeed": 10, "power": 3000 },
+      { "windSpeed": 12, "power": 3000 },
+      { "windSpeed": 25, "power": 3000 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.5 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Nordex N80/2500",
     "ratedPower": 2500,
     "rotorDiameter": 80,
     "hubHeight": 100,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 800 },
+      { "windSpeed": 10, "power": 2500 },
+      { "windSpeed": 12, "power": 2500 },
+      { "windSpeed": 25, "power": 2500 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.5 },
+      { "windSpeed": 25, "thrust": 0.6 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Repower MM82",
     "ratedPower": 2200,
     "rotorDiameter": 82,
     "hubHeight": 100,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 700 },
+      { "windSpeed": 10, "power": 2200 },
+      { "windSpeed": 12, "power": 2200 },
+      { "windSpeed": 25, "power": 2200 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.5 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   },
   {
     "name": "Siemens SWT-2.3-108",
     "ratedPower": 2300,
     "rotorDiameter": 108,
     "hubHeight": 100,
-    "yawControl": true
+    "yawControl": true,
+    "powerCurve": [
+      { "windSpeed": 0, "power": 0 },
+      { "windSpeed": 3, "power": 0 },
+      { "windSpeed": 6, "power": 600 },
+      { "windSpeed": 10, "power": 2300 },
+      { "windSpeed": 12, "power": 2300 },
+      { "windSpeed": 25, "power": 2300 }
+    ],
+    "thrustCoefficientCurve": [
+      { "windSpeed": 0, "thrust": 0 },
+      { "windSpeed": 6, "thrust": 0.3 },
+      { "windSpeed": 10, "thrust": 0.4 },
+      { "windSpeed": 15, "thrust": 0.45 },
+      { "windSpeed": 25, "thrust": 0.5 }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
   }
 ]

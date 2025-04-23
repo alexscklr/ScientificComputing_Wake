@@ -1,0 +1,44 @@
+.turbine-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9fbfd;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+    width: 80%;
+}
+
+
+.turbine-form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: #333;
+}
+
+
+
+.turbine-form-btn-container {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.turbine-form-btn {
+    padding: 0.6rem 1.2rem;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.turbine-form-btn.save {
+    background-color: #1976d2;
+}
+
+.turbine-form-btn.cancel {
+    background-color: #f44336;
+}

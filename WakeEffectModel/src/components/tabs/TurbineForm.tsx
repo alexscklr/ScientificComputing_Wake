@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Turbine, TurbineType } from '../../types/Turbine';
+import { Turbine, TurbineType, isTurbineType } from '../../types/Turbine';
 import turbinePresets from './../../assets/turbineTypes.json';
+import './../styles/TurbineForm.css';
 
 interface TurbineFormProps {
   lat: number;
   long: number;
   name: string;
   type: TurbineType;
+  available: boolean;
   onSave: (data: Omit<Turbine, 'id'>) => void;
   onCancel: () => void;
 }
 
-const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({ name, lat, long, type });
+const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, available, onSave, onCancel }) => {
+  const [formData, setFormData] = useState({ name, lat, long, type, available });
 
-  // Effekt, um die Formulardaten zu aktualisieren, wenn lat, long, name oder type sich ändern
+  // Effekt, um die Formulardaten zu aktualisieren, wenn lat, long, name, type oder available sich ändern
   useEffect(() => {
-    setFormData({ name, lat, long, type });
-  }, [lat, long, name, type]);
+    setFormData({ name, lat, long, type, available });
+  }, [lat, long, name, type, available]);
 
   // Funktion für die Änderung der Eingabefelder
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type: inputType, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'lat' || name === 'long' ? parseFloat(value) : value,
+      [name]: inputType === 'checkbox' ? checked : value,
     }));
   };
 
@@ -36,12 +38,13 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
 
   // Handler für den Wechsel des Turbinentyps im Dropdown
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const key : any = e.target.value;
+    const key = e.target.value as keyof typeof turbinePresets;
     const selected = turbinePresets[key];
-    if (selected) {
+
+    if (isTurbineType(selected)) {
       setFormData((prev) => ({
         ...prev,
-        type: selected,
+        type: selected,  // Aktualisiere den Typ, ohne thrustCoefficientCurve zu ändern
       }));
     }
   };
@@ -52,23 +55,19 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
       name: formData.name,
       lat: formData.lat,
       long: formData.long,
-      type: formData.type
+      type: formData.type,
+      available: formData.available, 
     });
   };
 
+  const handleCancel = () => {
+    onCancel();  // Aufrufen der onCancel-Funktion
+  };
+  
+
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '1rem',
-      padding: '1.5rem',
-      border: '1px solid #ddd',
-      borderRadius: '8px',
-      backgroundColor: '#f9fbfd',
-      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
-      maxWidth: '400px'
-    }}>
-      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', color: '#333' }}>
+    <div className='turbine-form-container'>
+      <label className='turbine-form-label'>
         Name:
         <input
           type="text"
@@ -83,8 +82,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
           }}
         />
       </label>
-    
-      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', color: '#333' }}>
+
+      <label className='turbine-form-label'>
         Typ:
         <select
           value={getKeyForType(formData.type)}
@@ -103,8 +102,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
           ))}
         </select>
       </label>
-    
-      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', color: '#333' }}>
+
+      <label className='turbine-form-label'>
         Latitude:
         <input
           type="number"
@@ -119,8 +118,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
           }}
         />
       </label>
-    
-      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', color: '#333' }}>
+
+      <label className='turbine-form-label'>
         Longitude:
         <input
           type="number"
@@ -135,39 +134,36 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, onSave
           }}
         />
       </label>
-    
-      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-        <button
-          onClick={handleSave}
+
+      <label className='turbine-form-label'>
+        Verfügbar:
+        <input
+          type="checkbox"
+          name="available"
+          checked={formData.available}
+          onChange={handleInputChange}
           style={{
-            padding: '0.6rem 1.2rem',
-            backgroundColor: '#1976d2',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
+            padding: '0.6rem',
             fontSize: '1rem'
           }}
+        />
+      </label>
+
+      <div className='turbine-form-btn-container'>
+        <button
+          onClick={handleSave}
+          className="turbine-form-btn save"
         >
           💾 Speichern
         </button>
         <button
-          onClick={onCancel}
-          style={{
-            padding: '0.6rem 1.2rem',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem'
-          }}
+          onClick={handleCancel}
+          className='turbine-form-btn cancel'
         >
           ❌ Abbrechen
         </button>
       </div>
     </div>
-    
   );
 };
 
