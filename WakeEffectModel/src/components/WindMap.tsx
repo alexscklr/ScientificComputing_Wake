@@ -11,8 +11,8 @@ interface WindMapProps {
   activeTurbine: Turbine | null;
   setMapCenter: (center: Point) => void
   onAddTurbine: (lat: number, lon: number) => void;
-  onEditTurbine: (id: number) => void;
-  onDragTurbine: (id: number, lat: number, lng: number) => void;
+  onEditTurbine: (id: string) => void;
+  onDragTurbine: (id: string, lat: number, lng: number) => void;
 }
 
 const MapClickHandler = ({ map, onAddTurbine, onDragMap }: { map : Map | undefined, onAddTurbine: (lat: number, lon: number) => void, onDragMap : (point : Point) => void}) => {
@@ -63,7 +63,7 @@ const WindMap: React.FC<WindMapProps> = ({ turbines, activeTurbine, setMapCenter
           <Popup>
             <p style={{margin: '0'}}>{turbine.name}</p><br />
             <hr style= {{marginTop: '0'}}/>
-            {turbine.type.name}<br />
+            {turbine?.type?.name}<br />
             {turbine.lat.toFixed(5)}, {turbine.long.toFixed(5)}<br />
             <p style={{color: 'green', marginTop: '5%'}}>{turbine.powerWithoutWake ? turbine.powerWithoutWake.toFixed(2)+'kW' : ''}</p>
           </Popup>

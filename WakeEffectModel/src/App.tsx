@@ -17,18 +17,18 @@ function App() {
 
   const handleMapClick = (lat: number, long: number) => {
     // Setze die aktive Turbine auf null, wenn du in den Modes.New Modus gehst
-    setActiveTurbine({ id: Date.now(), name: `Wind Turbine ${turbines.length+1}`, type: turbinesPresets.find((t: TurbineType) => t.name === "DefaultNull") || turbinesPresets[0], lat, long, available: true });
+    setActiveTurbine({ id: crypto.randomUUID(), name: `Wind Turbine ${turbines.length+1}`, type: turbinesPresets.find((t: TurbineType) => t.name === "DefaultNull") || turbinesPresets[0], lat, long, available: true });
     setMode(Modes.New); // Wechsel in den Modes.New Modus
   };
 
   const saveNewTurbine = (data: Omit<Turbine, 'id'>) => {
-    const newTurbine: Turbine = { ...data, id: turbines.length + 1 };
+    const newTurbine: Turbine = { ...data, id: crypto.randomUUID() };
     setTurbines((prev) => [...prev, newTurbine]);
-    setMode(Modes.Toolbar); // Zurück zur Toolbar
+    setMode(Modes.New); // Zurück zur Toolbar
     setActiveTurbine(null); // Setze aktive Turbine zurück
   };
 
-  const editTurbine = (id: number) => {
+  const editTurbine = (id: string) => {
     const turbineToEdit = turbines.find((turbine) => turbine.id === id);
     if (turbineToEdit) {
       setActiveTurbine(turbineToEdit);
@@ -49,7 +49,7 @@ function App() {
     setActiveTurbine(null);
   };
 
-  const dragTurbine = (id: number, lat: number, long: number) => {
+  const dragTurbine = (id: string, lat: number, long: number) => {
     setTurbines((prev) =>
       prev.map((turbine) =>
         turbine.id === id ? { ...turbine, lat: lat, long: long } : turbine
@@ -62,7 +62,6 @@ function App() {
   return (
     <div style={{ display: 'flex', height: '100vh', maxWidth: '100%' }}>
       {/* Linke Seite: Karte */}
-      <div style={{ flex: 5 }}>
         <WindMap
           turbines={turbines}
           setMapCenter={setMapCenter}
@@ -71,10 +70,8 @@ function App() {
           onEditTurbine={editTurbine} // Optional: zum Bearbeiten von Markern
           onDragTurbine={dragTurbine}
         />
-      </div>
 
       {/* Rechte Seite: Sidebar */}
-      <div style={{ flex: 2 }}>
         <Sidebar
           turbines={turbines}
           setTurbines={setTurbines}
@@ -85,7 +82,6 @@ function App() {
           onSave={mode === Modes.New ? saveNewTurbine : updateTurbine}
           onCancel={cancelEdit}
         />
-      </div>
     </div>
   );
 }

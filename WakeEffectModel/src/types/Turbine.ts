@@ -1,5 +1,5 @@
 export interface Turbine {
-  id: number;
+  id: string;
   name: string;
   lat: number;
   long: number;

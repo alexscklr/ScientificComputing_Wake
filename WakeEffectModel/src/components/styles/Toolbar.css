@@ -1,14 +1,7 @@
-.toolbar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
 .toolbar-section {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: clamp(200px, 50%, 500px);
   gap: 1rem;
   padding: 1rem;
   border: 1px solid #ddd;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Turbine } from '../../types/Turbine';
 import '../styles/Toolbar.css';
 
@@ -42,19 +42,17 @@ const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
     reader.readAsText(file);
   };
 
-  
-  
+
+
 
   return (
-    <div className="toolbar-container">
-      <div className="toolbar-section">
-        <h3>🌪️ Turbinen</h3>
-        <button onClick={exportTurbines}>📤 Exportieren</button>
-        <label>
-          📥 Importieren:
-          <input type="file" accept="application/json" onChange={importTurbines} />
-        </label>
-      </div>
+    <div className="toolbar-section">
+      <h3>🌪️ Turbinen</h3>
+      <button onClick={exportTurbines}>📤 Exportieren</button>
+      <label>
+        📥 Importieren:
+        <input type="file" accept="application/json" onChange={importTurbines} />
+      </label>
     </div>
 
 
