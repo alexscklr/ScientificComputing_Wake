@@ -16,9 +16,9 @@ type SidebarProps = {
   mapCenter: Point;
   windroseData?: WindroseData;
   setWindroseData: (wr: WindroseData) => void;
-  activeTurbine: Turbine | null;
-  onSave: (data: Omit<Turbine, 'id'>) => void;
-  onCancel: () => void;
+  activeTurbine: Turbine[];
+  onSave: (turbine: Turbine) => void;
+  onCancel: (id?: string) => void;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel }) => {
@@ -27,15 +27,19 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
   const isResizing = useRef(false);
 
-  const handleSave = (data: Omit<Turbine, 'id'>) => {
+  const handleSave = (turbine: Turbine) => {
     if (onSave) {
-      onSave(data);
+      onSave(turbine);
     }
   };
 
   const handleCancel = () => {
-    onCancel();
-    setMode(Modes.Toolbar);  // Setze den Modus auf Modes.Toolbar, wenn man auf 'Abbrechen' klickt
+    // Wenn activeTurbine eine Turbine enthält, übergebe deren ID an cancelEdit
+    if (activeTurbine.length > 0) {
+      onCancel(activeTurbine[0].id); // Nutze die ID der ersten Turbine in activeTurbine
+    } else {
+      onCancel(); // Wenn activeTurbine leer ist, setze es einfach auf ein leeres Array zurück
+    }
   };
 
   useEffect(() => { }, [mode]);
@@ -58,7 +62,6 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
       setSidebarWidth(newWidth);
     }
   };
-
 
   const stopResizing = () => {
     isResizing.current = false;
@@ -99,16 +102,32 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
         {mode === Modes.Toolbar && (
           <Toolbar turbines={turbines} setTurbines={setTurbines} />
         )}
-        {(mode === Modes.New || mode === Modes.Edit) && (
+        {(mode === Modes.New) && (
           <TurbineForm
-            lat={activeTurbine ? activeTurbine.lat : mapCenter.x}
-            long={activeTurbine ? activeTurbine.long : mapCenter.y}
-            name={activeTurbine ? activeTurbine.name : `Wind Turbine ${turbines.length + 1}`}
-            type={activeTurbine ? activeTurbine.type : turbinesPresets.find(t => t.name === 'DefaultNull')!}
-            available={activeTurbine ? activeTurbine.available : true}
-            onSave={mode === Modes.New ? handleSave : onSave}
+            id={activeTurbine[0]?.id}
+            lat={activeTurbine[0]?.lat || mapCenter.x}
+            long={activeTurbine[0]?.long || mapCenter.y}
+            name={`Wind Turbine ${turbines.length + 1}`}
+            type={turbinesPresets.find(t => t.name === 'DefaultNull')!}
+            available={true}
+            onSave={(turbine: Turbine) => handleSave(turbine)} // Sichere Übergabe der spezifischen Turbine
             onCancel={handleCancel}
           />
+        )}
+        {(mode === Modes.Edit) && (
+          activeTurbine.map((at: Turbine) => (
+            <TurbineForm
+              key={at.id}  // Ein Schlüssel hinzugefügt, um mehrere Turbinen zu unterscheiden
+              id={at.id}
+              lat={at.lat}
+              long={at.long}
+              name={at.name}
+              type={at.type}
+              available={at.available}
+              onSave={(turbine: Turbine) => handleSave(turbine)}  // Sichere Übergabe der spezifischen Turbine
+              onCancel={handleCancel}
+            />
+          ))
         )}
         {mode === Modes.Windrose && (
           <WindroseComponent
@@ -134,6 +153,5 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
     </div>
   );
 };
-
 
 export default Sidebar;

@@ -3,21 +3,24 @@ import { Turbine, TurbineType, isTurbineType } from '../../types/Turbine';
 import turbinePresets from './../../assets/turbineTypes.json';
 import './../styles/TurbineForm.css';
 import PopupMessage from '../parts/PopupMessage';
+import { Modes, useMode } from '../../context/ModeContext';
 
 interface TurbineFormProps {
+  id: string;
   lat: number;
   long: number;
   name: string;
   type: TurbineType;
   available: boolean;
-  onSave: (data: Omit<Turbine, 'id'>) => void;
-  onCancel: () => void;
+  onSave: (turbine: Turbine) => void;
+  onCancel: (id?: string) => void;
 }
 
-const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, available, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({ name, lat, long, type, available });
+const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, available, onSave, onCancel }) => {
+  const [formData, setFormData] = useState({ id, name, lat, long, type, available });
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('');
+  const { mode, setMode } = useMode();
 
   const [layoutMode, setLayoutMode] = useState(false);
   const [layoutData, setLayoutData] = useState({
@@ -28,7 +31,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
   });
 
   useEffect(() => {
-    setFormData({ name, lat, long, type, available });
+    setFormData({ id, name, lat, long, type, available });
   }, [lat, long, name, type, available]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +68,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
     }));
   };
 
-  const generateLayout = (): Omit<Turbine, 'id'>[] => {
-    const turbines: Omit<Turbine, 'id'>[] = [];
+  const generateLayout = (): Turbine[] => {
+    const turbines: Turbine[] = [];
 
     const degToRad = (deg: number) => deg * (Math.PI / 180);
     const rad = degToRad(layoutData.rotation);
@@ -86,10 +89,11 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
         const long = formData.long + metersToLong(rotatedX, formData.lat);
 
         turbines.push({
+          id: crypto.randomUUID(),
           name: `${formData.name}_${r}_${c}`,
           lat,
           long,
-          type: formData.type,
+          type: formData.type, // Vergewissere dich, dass hier der Typ korrekt zugewiesen wird
           available: true,
         });
       }
@@ -98,49 +102,44 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
   };
 
   const handleSave = () => {
+    // Prüfen, ob ein gültiger Typ ausgewählt wurde
     if (formData.type.name === 'DefaultNull') {
-      setMessage("Select a type!");
+      setMessage('Bitte einen gültigen Typ auswählen!');
       setMessageVisible(true);
       return;
     }
 
     if (!layoutMode) {
-      onSave({
-        name: formData.name,
-        lat: formData.lat,
-        long: formData.long,
-        type: formData.type,
-        available: formData.available,
-      });
+      onSave({ ...formData });
     } else {
       const turbines = generateLayout();
-      turbines.forEach(turbine => onSave(turbine));
+      turbines.forEach((t) => onSave(t));
     }
   };
 
   const handleCancel = () => {
-    onCancel();
+    onCancel(formData.id);
   };
 
   return (
-    <div className='turbine-form-container'>
-      <label className='turbine-form-label'>
+    <div className="turbine-form-container">
+      <label className="turbine-form-label">
         Name:
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          className='turbine-form-input'
+          className="turbine-form-input"
         />
       </label>
 
-      <label className='turbine-form-label'>
+      <label className="turbine-form-label">
         Typ:
         <select
           value={getKeyForType(formData.type)}
           onChange={handleTypeChange}
-          className='turbine-form-input'
+          className="turbine-form-input"
         >
           {Object.entries(turbinePresets).map(([key, turbineType]) => (
             <option key={key} value={key}>
@@ -150,101 +149,105 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
         </select>
       </label>
 
-      <label className='turbine-form-label'>
+      <label className="turbine-form-label">
         Latitude:
         <input
           type="number"
           name="lat"
           value={formData.lat}
           onChange={handleInputChange}
-          className='turbine-form-input'
+          className="turbine-form-input"
         />
       </label>
 
-      <label className='turbine-form-label'>
+      <label className="turbine-form-label">
         Longitude:
         <input
           type="number"
           name="long"
           value={formData.long}
           onChange={handleInputChange}
-          className='turbine-form-input'
+          className="turbine-form-input"
         />
       </label>
 
-      <label className='turbine-form-label flexRow'>
+      <label className="turbine-form-label flexRow">
         Verfügbar:
         <input
           type="checkbox"
           name="available"
           checked={formData.available}
           onChange={handleInputChange}
-          className='turbine-form-input'
+          className="turbine-form-input"
         />
       </label>
 
       {/* Layout-Modus Umschalter */}
-      <div className='layout-toggle'>
-        <label className='turbine-form-label flexRow'>
-          <input
-            type="checkbox"
-            checked={layoutMode}
-            onChange={() => setLayoutMode(!layoutMode)}
-          />
-          Layout erstellen
-        </label>
-      </div>
+      {mode === Modes.New && (
+        <>
+          <div className="layout-toggle">
+            <label className="turbine-form-label flexRow">
+              <input
+                type="checkbox"
+                checked={layoutMode}
+                onChange={() => setLayoutMode(!layoutMode)}
+              />
+              Layout erstellen
+            </label>
+          </div>
 
-      {/* Layout Einstellungen */}
-      {layoutMode && (
-        <div className="layout-settings">
-          <label className='turbine-form-label'>
-            Zeilen:
-            <input
-              type="number"
-              name="rows"
-              value={layoutData.rows}
-              onChange={handleLayoutChange}
-              className='turbine-form-input'
-              min={1}
-            />
-          </label>
-          <label className='turbine-form-label'>
-            Spalten:
-            <input
-              type="number"
-              name="columns"
-              value={layoutData.columns}
-              onChange={handleLayoutChange}
-              className='turbine-form-input'
-              min={1}
-            />
-          </label>
-          <label className='turbine-form-label'>
-            Abstand (m):
-            <input
-              type="number"
-              name="spacing"
-              value={layoutData.spacing}
-              onChange={handleLayoutChange}
-              className='turbine-form-input'
-              min={0}
-            />
-          </label>
-          <label className='turbine-form-label'>
-            Rotation (°):
-            <input
-              type="number"
-              name="rotation"
-              value={layoutData.rotation}
-              onChange={handleLayoutChange}
-              className='turbine-form-input'
-            />
-          </label>
-        </div>
+          {/* Layout Einstellungen */}
+          {layoutMode && (
+            <div className="layout-settings">
+              <label className="turbine-form-label">
+                Zeilen:
+                <input
+                  type="number"
+                  name="rows"
+                  value={layoutData.rows}
+                  onChange={handleLayoutChange}
+                  className="turbine-form-input"
+                  min={1}
+                />
+              </label>
+              <label className="turbine-form-label">
+                Spalten:
+                <input
+                  type="number"
+                  name="columns"
+                  value={layoutData.columns}
+                  onChange={handleLayoutChange}
+                  className="turbine-form-input"
+                  min={1}
+                />
+              </label>
+              <label className="turbine-form-label">
+                Abstand (m):
+                <input
+                  type="number"
+                  name="spacing"
+                  value={layoutData.spacing}
+                  onChange={handleLayoutChange}
+                  className="turbine-form-input"
+                  min={0}
+                />
+              </label>
+              <label className="turbine-form-label">
+                Rotation (°):
+                <input
+                  type="number"
+                  name="rotation"
+                  value={layoutData.rotation}
+                  onChange={handleLayoutChange}
+                  className="turbine-form-input"
+                />
+              </label>
+            </div>
+          )}
+        </>
       )}
 
-      <div className='turbine-form-btn-container'>
+      <div className="turbine-form-btn-container">
         <button
           onClick={handleSave}
           className="turbine-form-btn save"
@@ -253,7 +256,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ lat, long, name, type, availa
         </button>
         <button
           onClick={handleCancel}
-          className='turbine-form-btn cancel'
+          className="turbine-form-btn cancel"
         >
           ❌ Abbrechen
         </button>
