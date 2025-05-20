@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import '../styles/WindRoseComp.css';
-import { WindroseData, WindroseEntry, SpeedUnits } from '../../types/WindRose';
+import { WindroseData, SpeedUnits, speedBins } from '../../types/WindRose';
+import { parseCsvToWindrose, convertToWindrose } from '../../utils/UploadWindroseCSV';
+import { convertSpeedUnits } from '../../utils/CalculateWithoutWake';
 
 interface WindRoseCompProps {
   windroseData?: WindroseData;
@@ -9,78 +11,13 @@ interface WindRoseCompProps {
 
 const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseData }) => {
   const [fileName, setFileName] = useState<string>('');
+  const [station, setStation] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
-  const mphToMs = (mph: number) => mph * 0.44704;
-  const mphToKph = (mph: number) => mph * 1.690934;
-  const msToMph = (ms: number) => ms / 0.44704;
-  const kphToMph = (kmh: number) => kmh / 1.690934;
-  const msToKph = (ms: number) => ms * 3.6;
-  const kphToMs = (kmh: number) => kmh / 3.6;
-
-  const speedBins: [number, number][] = [
-    [2.0, 4.9],
-    [5.0, 6.9],
-    [7.0, 9.9],
-    [10.0, 14.9],
-    [15.0, 19.9],
-    [20.0, Infinity],
-  ];
-
-  const speedBinsMS: [number, number][] = speedBins.map(([v1, v2]) => {
-    return [Math.round(mphToMs(v1) * 100) / 100, Math.round(mphToMs(v2) * 100) / 100];
-  })
-
-  const parseCsv = (csvString: string): WindroseData => {
-    const lines = csvString
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0 && !line.startsWith('#'));
-
-    let calmFrequency = 0;
-    const data: WindroseEntry[] = [];
-
-    let speedBins: [number, number][] = [];
-
-    for (const line of lines) {
-      const parts = line.split(',').map((v) => v.trim());
-
-      if (/^Direction/i.test(parts[0])) {
-        // Hier extrahieren wir die Speed-Bins
-        speedBins = parts.slice(2).map((range) => {
-          const [startStr, endStr] = range.split(/\s+/);
-          const start = parseFloat(startStr);
-          const end = endStr === '+' ? Infinity : parseFloat(endStr);
-          return [start, end];
-        }) as [number, number][];
-        continue;
-      }
-
-      if (!/^\d{3}-\d{3}/.test(parts[0])) continue;
-
-      const directionLabel = parts[0];
-      const [startStr, endStr] = directionLabel.split('-');
-      const directionRange: [number, number] = [parseInt(startStr), parseInt(endStr)];
-
-      const calm = parseFloat(parts[1]) || 0;
-      const frequencies = parts.slice(2).map((v) => parseFloat(v) || 0);
-
-      calmFrequency += calm;
-
-      data.push({
-        directionRange,
-        frequencies,
-      });
-    }
-
-    return {
-      id: Date.now(),
-      speedUnit: SpeedUnits.mph,
-      calmFrequency,
-      speedBins,
-      data,
-    };
-  };
-
+  const dataCount = useRef<number>(0);
+  const dataErrors = useRef<number>(0);
+  const frequencySum = useRef<number>(0);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -92,13 +29,13 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
         const csvString = e.target?.result as string;
 
         if (csvString) {
-          const parsedData = parseCsv(csvString);
+          const parsedData = parseCsvToWindrose(csvString);
           setWindroseData({
             ...parsedData,
             name: file.name,
+            speedUnit: parsedData.speedUnit ?? SpeedUnits.knt, // Default-Einheit setzen
           });
           setFileName(file.name);
-
         } else {
           console.error('Fehler beim Laden der Datei.');
         }
@@ -108,56 +45,55 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
     }
   };
 
-  const changeSpeedUnit = (newUnit : string) => {
-    if (windroseData?.speedUnit === newUnit) return;
-    if (windroseData?.speedUnit === SpeedUnits.mph && newUnit === SpeedUnits.ms) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(mphToMs(v1)*100)/100, Math.round(mphToMs(v2)*100)/100]})
-      });
-      return;
+  const handleApiSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const params = new URLSearchParams({
+      station,
+      format: 'onlycomma',
+      tz: 'UTC',
+      year1: start.getFullYear().toString(),
+      month1: (start.getMonth() + 1).toString(),
+      day1: start.getDate().toString(),
+      year2: end.getFullYear().toString(),
+      month2: (end.getMonth() + 1).toString(),
+      day2: end.getDate().toString(),
+    });
+
+    params.append('data', 'drct');
+    params.append('data', 'sped');
+
+    try {
+      const response = await fetch(
+        `https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?${params.toString()}`
+      );
+      const text = await response.text();
+      const windrose = convertToWindrose(text, dataCount, dataErrors, frequencySum);
+
+      windrose.name = `API_${station}_${startDate}_bis_${endDate}`;
+
+      setWindroseData(windrose);
+      setFileName(windrose.name);
+    } catch (err) {
+      console.error('API-Fehler:', err);
+      alert('Fehler beim Abrufen der Winddaten.');
     }
-    if (windroseData?.speedUnit === SpeedUnits.mph && newUnit === SpeedUnits.kph) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(mphToKph(v1)*100)/100, Math.round(mphToKph(v2)*100)/100]})
-      });
-      return;
-    }
-    if (windroseData?.speedUnit === SpeedUnits.ms && newUnit === SpeedUnits.mph) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(msToMph(v1)*100)/100, Math.round(msToMph(v2)*100)/100]})
-      });
-      return;
-    }
-    if (windroseData?.speedUnit === SpeedUnits.kph && newUnit === SpeedUnits.mph) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(kphToMph(v1)*100)/100, Math.round(kphToMph(v2)*100)/100]})
-      });
-      return;
-    }
-    if (windroseData?.speedUnit === SpeedUnits.ms && newUnit === SpeedUnits.kph) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(msToKph(v1)*100)/100, Math.round(msToKph(v2)*100)/100]})
-      });
-      return;
-    }
-    if (windroseData?.speedUnit === SpeedUnits.kph && newUnit === SpeedUnits.ms) {
-      setWindroseData({
-        ...windroseData,
-        speedUnit: newUnit,
-        speedBins: windroseData.speedBins.map(([v1,v2]) => {return [Math.round(kphToMs(v1)*100)/100, Math.round(kphToMs(v2)*100)/100]})
-      });
-      return;
-    }
+  };
+
+  const changeSpeedUnit = (newUnit: string) => {
+    if (!windroseData || windroseData.speedUnit === newUnit) return;
+
+    setWindroseData({
+      ...windroseData,
+      speedUnit: newUnit as SpeedUnits,
+      speedBins: windroseData.speedBins.map(([v1, v2]) => [
+        Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+        isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+      ]),
+    });
   };
 
   return (
@@ -165,55 +101,105 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
       <h2>Windrose-Daten</h2>
       <input type="file" accept=".csv" onChange={handleFileUpload} />
       {fileName && <p>Hochgeladene Datei: {fileName}</p>}
-      {(windroseData) && (<label style={{margin: '10px'}}>
-        Einheit:
-        <select
-          value={windroseData.speedUnit}
-          onChange={(e) =>
-            { changeSpeedUnit(e.target.value) }
-          }
-          style={{marginLeft: '10px'}}
+
+      {windroseData && (
+        <label>
+          Einheit:
+          <select value={windroseData.speedUnit} onChange={(e) => changeSpeedUnit(e.target.value)}>
+            {Object.values(SpeedUnits).map((unit) => (
+              <option key={unit} value={unit}>
+                {unit}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+
+      {windroseData && (
+        <label>
+          Messhöhe:
+          <input
+            type="number"
+            value={windroseData.elevation}
+            onChange={(e) => setWindroseData({ ...windroseData, elevation: +e.target.value })}
+          />
+        </label>
+      )}
+
+      <h2>
+        Windrose über API (
+        <a
+          href="https://mesonet.agron.iastate.edu/sites/networks.php?network=DE__ASOS&format=html"
+          target="_blank"
+          rel="noreferrer"
         >
-          {Object.values(SpeedUnits).map((unit) => (
-            <option key={unit} value={unit}>
-              {unit}
-            </option>
-          ))}
-        </select>
-      </label>)}
+          Iowa Environmental Mesonet
+        </a>
+        ) abrufen
+      </h2>
+      <form onSubmit={handleApiSubmit} className="windrose-form">
+        <div className="form-group">
+          <label>
+            Station (z.B. EDXW):
+            <input type="text" value={station} onChange={(e) => setStation(e.target.value.toUpperCase())} required />
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            Startdatum:
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            Enddatum:
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
+          </label>
+        </div>
+        
+        <button type="submit">Daten abrufen</button>
+      </form>
 
       {windroseData ? (
-        <div style={{ maxHeight: '500px', width: '100%', overflowY: 'auto' }}>
-          <h3>{windroseData.name}</h3>
-          <table className="windrose-table">
-            <thead>
-              <tr>
-                <th>Richtung</th>
-                {windroseData.speedBins.map((bin, i) => (
-                  <th key={i} style={{whiteSpace:'nowrap', border: '1px solid #ccc'}}>
-                    {isNaN(bin[1]) ? `${bin[0]}+` : `${bin[0]}–${bin[1]}`} {windroseData.speedUnit}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {windroseData.data.map((entry, index) => (
-                <tr key={index}>
-                  <td style={{border: '1px solid #ccc'}}>
-                    {entry.directionRange[0].toFixed(0)}–{entry.directionRange[1].toFixed(0)}
-                  </td>
-                  {entry.frequencies.map((freq, i) => (
-                    <td key={i} style={{border: '1px solid #ccc'}}>{freq.toFixed(3)}</td>
+        <>
+          <div style={{ maxHeight: '500px', width: '100%', overflowY: 'auto' }}>
+            <h3>{windroseData.name}</h3>
+            <table className="windrose-table">
+              <thead>
+                <tr>
+                  <th>Richtung</th>
+                  {windroseData.speedBins.map((bin, i) => (
+                    <th key={i} style={{ whiteSpace: 'nowrap', border: '1px solid #ccc' }}>
+                      {isNaN(bin[1]) ? `${bin[0]}+` : `${bin[0]}–${bin[1]}`} {windroseData.speedUnit}
+                    </th>
                   ))}
                 </tr>
-              ))}
-              <tr>
-                <td><strong>Calm</strong></td>
-                <td colSpan={windroseData.speedBins.length}>{windroseData.calmFrequency.toFixed(3)} %</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {windroseData.data.map((entry, index) => (
+                  <tr key={index}>
+                    <td style={{ border: '1px solid #ccc' }}>
+                      {entry.directionRange[0].toFixed(0)}–{entry.directionRange[1].toFixed(0)}
+                    </td>
+                    {entry.frequencies.map((freq, i) => (
+                      <td key={i} style={{ border: '1px solid #ccc' }}>{freq.toFixed(3)}</td>
+                    ))}
+                  </tr>
+                ))}
+                <tr>
+                  <td>
+                    <strong>Calm</strong>
+                  </td>
+                  <td colSpan={windroseData.speedBins.length}>{windroseData.calmFrequency.toFixed(3)} %</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Data Count : {dataCount.current} | Errors :{' '}
+            {Math.round((dataErrors.current / dataCount.current) * 10000) / 100}%
+          </p>
+        </>
       ) : (
         <p className="no-file-message">Bitte lade eine CSV-Datei hoch.</p>
       )}
@@ -222,4 +208,3 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
 };
 
 export default WindRoseComp;
-

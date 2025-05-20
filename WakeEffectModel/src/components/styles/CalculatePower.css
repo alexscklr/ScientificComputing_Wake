@@ -1,51 +1,77 @@
-.calculate-container {
+.calc-container {
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    margin: 0 auto;
     gap: 1rem;
-    max-width: 600px;
-}
-
-.calculateWithout-btn {
-    padding: 0.6rem 1.2rem;
-    background-color: green;
+  }
+  
+  .tab-wrapper {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .tab-btn.active {
+    background-color: #4a90e2;
     color: white;
-    font-size: 1rem;
+  }
+  
+  .tab-btn.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  .calculate-btn {
+    padding: 0.5rem 1rem;
+    background-color: #2e7d32;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.progress-bar-wrapper {
-    width: 100%;
-    height: 10px;
-    background-color: #eee;
-    border-radius: 5px;
-    margin: 10px 0;
+  }
+  
+  .progress-bar-wrapper {
+    height: 8px;
+    background-color: #ddd;
+    border-radius: 4px;
     overflow: hidden;
   }
   
   .progress-bar {
-    height: 100%;
-    background-color: #3498db;
-    transition: width 0.3s ease;
+    height: 8px;
+    background-color: #2e7d32;
+    transition: width 0.3s ease-in-out;
   }
   
-
-.result-wrapper {
+  .result-wrapper {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-}
-
-.result-displayer {
+  }
+  
+  .result-card {
+    background-color: #f9f9f9;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: #f9fbfd;
-    font-size: 1rem;
-}
+  }
+  
+  .result-name {
+    font-weight: bold;
+  }
+  
+  .result-power {
+    color: #2e7d32;
+    font-weight: 500;
+  }
+  

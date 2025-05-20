@@ -1,90 +1,133 @@
 /* Grundlegende Stile für den Container */
 .windrose-container {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: clamp(200px, 70%, 900px);
-    margin: 0 auto;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  /* Überschrift für den Container */
-  .windrose-container h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  
-  /* Stil für das Datei-Upload-Input */
-  input[type="file"] {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
-  
-  input[type="file"]:hover {
-    border-color: #888;
-    background-color: #eee;
-  }
-  
-  /* Text für die hochgeladene Datei */
-  .windrose-container p {
-    font-size: 16px;
-    color: #666;
-    margin-top: 10px;
-  }
-  
-  /* Stil für das Windrose-Daten-Table */
-  .windrose-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    max-height: 400px;
-    overflow: auto;
-  }
-  
-  /* Header der Tabelle */
-  .windrose-table thead {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .windrose-table th {
-    padding: 12px;
-    text-align: left;
-    font-size: 16px;
-  }
-  
-  /* Zeilen der Tabelle */
-  .windrose-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  .windrose-table tbody tr:hover {
-    background-color: #ddd;
-  }
-  
-  /* Zellen der Tabelle */
-  .windrose-table td {
-    padding: 12px;
-    font-size: 14px;
-    color: #333;
-    text-align: center;
-  }
-  
-  /* Hinweistext, wenn keine Datei hochgeladen wurde */
-  .no-file-message {
-    font-size: 16px;
-    color: #999;
-    margin-top: 20px;
-  }
-  
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 80%;
+  max-width: 1500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fdfdfd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.windrose-container h2 {
+  color: #2c3e50;
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+}
+
+.windrose-container h3 {
+  color: #34495e;
+  font-size: 1.3rem;
+  margin-top: 20px;
+}
+
+input[type="file"],
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select {
+  margin: 8px 0;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+label {
+  font-weight: 500;
+  display: block;
+  margin: 10px 0 5px;
+}
+
+button {
+  background-color: #2980b9;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #1c5985;
+}
+
+.windrose-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 5px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-group label {
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+
+
+.windrose-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 0.95rem;
+}
+
+.windrose-table th,
+.windrose-table td {
+  padding: 8px;
+  text-align: center;
+}
+
+.windrose-table th {
+  background-color: #ecf0f1;
+  border: 1px solid #bbb;
+}
+
+.windrose-table td {
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.windrose-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.no-file-message {
+  color: #c0392b;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
