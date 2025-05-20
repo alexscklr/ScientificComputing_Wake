@@ -86,13 +86,15 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
   const changeSpeedUnit = (newUnit: string) => {
     if (!windroseData || windroseData.speedUnit === newUnit) return;
 
+    let newSpeedBins : [number, number][] = windroseData.speedBins.map(([v1, v2]) => [
+        Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+        isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+      ])
+
     setWindroseData({
       ...windroseData,
       speedUnit: newUnit as SpeedUnits,
-      speedBins: windroseData.speedBins.map(([v1, v2]) => [
-        Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
-        isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
-      ]),
+      speedBins: newSpeedBins,
     });
   };
 
@@ -169,7 +171,7 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
                 <tr>
                   <th>Richtung</th>
                   {windroseData.speedBins.map((bin, i) => (
-                    <th key={i} style={{ whiteSpace: 'nowrap', border: '1px solid #ccc' }}>
+                    <th key={i} >
                       {isNaN(bin[1]) ? `${bin[0]}+` : `${bin[0]}–${bin[1]}`} {windroseData.speedUnit}
                     </th>
                   ))}
@@ -178,11 +180,11 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
               <tbody>
                 {windroseData.data.map((entry, index) => (
                   <tr key={index}>
-                    <td style={{ border: '1px solid #ccc' }}>
+                    <td >
                       {entry.directionRange[0].toFixed(0)}–{entry.directionRange[1].toFixed(0)}
                     </td>
                     {entry.frequencies.map((freq, i) => (
-                      <td key={i} style={{ border: '1px solid #ccc' }}>{freq.toFixed(3)}</td>
+                      <td key={i} >{freq.toFixed(3)}</td>
                     ))}
                   </tr>
                 ))}

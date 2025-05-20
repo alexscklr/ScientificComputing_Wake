@@ -101,6 +101,8 @@ button:hover {
 .windrose-table td {
   padding: 8px;
   text-align: center;
+  width: fit-content;
+  text-wrap: nowrap;
 }
 
 .windrose-table th {

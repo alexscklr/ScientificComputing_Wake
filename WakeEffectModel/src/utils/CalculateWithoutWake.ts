@@ -90,7 +90,6 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
 
         const avgWindSpeed = (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
         let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
-        console.log(avgWindSpeed,windrose.speedUnit, windSpeedMs);
         windSpeedMs = GetPowerLaw(windSpeedMs, turbine.type.hubHeight, windrose.elevation, 0.14);
         
 
