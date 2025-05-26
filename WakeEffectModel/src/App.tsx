@@ -5,13 +5,13 @@ import { Turbine, TurbineType } from './types/Turbine';
 import Sidebar from './components/Sidebar';
 import turbinesPresets from './assets/turbineTypes.json';
 import { Modes, useMode } from './context/ModeContext';
-import { WindroseData } from './types/WindRose';
+import { WindroseData, NullWindrose } from './types/WindRose';
 import { Point } from 'leaflet';
 import { applyShiftVector, calculateShiftVector } from './utils/geoUtils';
 
 function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
-  const [windroseData, setWindroseData] = useState<WindroseData | undefined>(undefined);
+  const [windroseData, setWindroseData] = useState<WindroseData>(NullWindrose);
   const [mapCenter, setMapCenter] = useState<Point>(new Point(51.6369, 8.234));
   const [activeTurbine, setActiveTurbine] = useState<Turbine[]>([]); // Halte die aktive Turbine
   const { mode, setMode } = useMode(); // Aktuellen Modus der Sidebar

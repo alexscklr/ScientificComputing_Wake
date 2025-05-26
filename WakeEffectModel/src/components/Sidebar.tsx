@@ -9,12 +9,13 @@ import './styles/Sidebar.css';
 import CalculatePower from './tabs/CalculatePower';
 import { WindroseData } from '../types/WindRose';
 import { Point } from 'leaflet';
+import TurbineTypesList from './tabs/TurbineTypesList';
 
 type SidebarProps = {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
   mapCenter: Point;
-  windroseData?: WindroseData;
+  windroseData: WindroseData;
   setWindroseData: (wr: WindroseData) => void;
   activeTurbine: Turbine[];
   onSave: (turbine: Turbine) => void;
@@ -44,9 +45,8 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
 
   useEffect(() => { }, [mode]);
 
-  const showBtnsOnHover = () => {
-    setShowBtns(!showBtns);
-  }
+  const handleMouseEnter = () => setShowBtns(true);
+  const handleMouseLeave = () => setShowBtns(false);
 
   const startResizing = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -71,12 +71,18 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
 
   return (
     <div className="sidebar-container" style={{ width: sidebarWidth, position: 'relative' }}>
-      <div className="sidebar-btn-container" onMouseEnter={showBtnsOnHover} onMouseLeave={showBtnsOnHover}>
+      <div className="sidebar-btn-container" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Toolbar ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Toolbar)}
         >
           Turbinen - Import/Export
+        </button>)}
+        {(<button
+          className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.TurbineTypes ? 'shown active' : ''}`}
+          onClick={() => setMode(Modes.TurbineTypes)}
+        >
+          Liste Turbinentypen
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.New || mode === Modes.Edit) ? 'shown active' : ''}`}
@@ -101,6 +107,9 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
       <div className='tab-container'>
         {mode === Modes.Toolbar && (
           <Toolbar turbines={turbines} setTurbines={setTurbines} />
+        )}
+        {mode === Modes.TurbineTypes && (
+          <TurbineTypesList />
         )}
         {(mode === Modes.New) && (
           <TurbineForm

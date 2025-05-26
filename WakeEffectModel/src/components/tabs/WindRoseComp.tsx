@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import '../styles/WindRoseComp.css';
-import { WindroseData, SpeedUnits, speedBins } from '../../types/WindRose';
+import { WindroseData, SpeedUnits, NullWindrose } from '../../types/WindRose';
 import { parseCsvToWindrose, convertToWindrose } from '../../utils/UploadWindroseCSV';
 import { convertSpeedUnits } from '../../utils/CalculateWithoutWake';
 
@@ -162,7 +162,7 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
         <button type="submit">Daten abrufen</button>
       </form>
 
-      {windroseData ? (
+      {windroseData && (windroseData != NullWindrose) ? (
         <>
           <div style={{ maxHeight: '500px', width: '100%', overflowY: 'auto' }}>
             <h3>{windroseData.name}</h3>

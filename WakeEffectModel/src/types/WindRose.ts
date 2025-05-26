@@ -71,3 +71,13 @@ export interface WindroseData {
   data: WindroseEntry[];
   elevation: number;
 }
+
+export const NullWindrose : WindroseData = {
+  id: 0,
+  name: "nullWindrose",
+  speedUnit: SpeedUnits.knt,
+  calmFrequency: 0,
+  speedBins: [[0,0]],
+  data: [{directionRange: [0,360], frequencies: [0]}],
+  elevation: 0
+}

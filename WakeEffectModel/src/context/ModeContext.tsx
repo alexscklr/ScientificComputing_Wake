@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type Mode = 'toolbar' | 'windrose' | 'new' | 'edit' | 'calculate';
+export type Mode = 'toolbar' | 'turbineTypes' | 'windrose' | 'new' | 'edit' | 'calculate';
 
 export enum Modes {
   Toolbar = 'toolbar',
+  TurbineTypes = 'turbineTypes',
   Windrose = 'windrose',
   New = 'new',
   Edit = 'edit',
