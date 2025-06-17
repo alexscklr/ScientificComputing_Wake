@@ -1,0 +1,210 @@
+[
+  {
+    "id": "2d9c2f42-3fd6-46a9-a994-37df6d8e3119",
+    "name": "Wind Turbine 1",
+    "lat": 51.64289727020664,
+    "long": 8.23755741119385,
+    "type": {
+      "name": "Enercon E-82",
+      "ratedPower": 2000,
+      "rotorDiameter": 82,
+      "hubHeight": 138,
+      "yawControl": true,
+      "powerCurve": [
+        {
+          "windSpeed": 1,
+          "power": 0
+        },
+        {
+          "windSpeed": 2,
+          "power": 3
+        },
+        {
+          "windSpeed": 3,
+          "power": 25
+        },
+        {
+          "windSpeed": 4,
+          "power": 82
+        },
+        {
+          "windSpeed": 5,
+          "power": 174
+        },
+        {
+          "windSpeed": 6,
+          "power": 321
+        },
+        {
+          "windSpeed": 7,
+          "power": 532
+        },
+        {
+          "windSpeed": 8,
+          "power": 815
+        },
+        {
+          "windSpeed": 9,
+          "power": 1180
+        },
+        {
+          "windSpeed": 10,
+          "power": 1612
+        },
+        {
+          "windSpeed": 11,
+          "power": 1890
+        },
+        {
+          "windSpeed": 12,
+          "power": 2000
+        },
+        {
+          "windSpeed": 13,
+          "power": 2050
+        },
+        {
+          "windSpeed": 14,
+          "power": 2050
+        },
+        {
+          "windSpeed": 25,
+          "power": 2050
+        },
+        {
+          "windSpeed": 26,
+          "power": 0
+        }
+      ],
+      "thrustCoefficientCurve": [
+        {
+          "windSpeed": 0,
+          "thrust": 0
+        },
+        {
+          "windSpeed": 6,
+          "thrust": 0.25
+        },
+        {
+          "windSpeed": 10,
+          "thrust": 0.35
+        },
+        {
+          "windSpeed": 15,
+          "thrust": 0.45
+        },
+        {
+          "windSpeed": 25,
+          "thrust": 0.55
+        }
+      ],
+      "cutIn": 2,
+      "cutOut": 25
+    },
+    "available": true
+  },
+  {
+    "id": "2d9c2f42-3fd6-46a9-a994-37df6d8e3119",
+    "name": "Wind Turbine 1",
+    "lat": 51.64289727020664,
+    "long": 8.23755741119385,
+    "type": {
+      "name": "Enercon E-82",
+      "ratedPower": 2000,
+      "rotorDiameter": 82,
+      "hubHeight": 138,
+      "yawControl": true,
+      "powerCurve": [
+        {
+          "windSpeed": 1,
+          "power": 0
+        },
+        {
+          "windSpeed": 2,
+          "power": 3
+        },
+        {
+          "windSpeed": 3,
+          "power": 25
+        },
+        {
+          "windSpeed": 4,
+          "power": 82
+        },
+        {
+          "windSpeed": 5,
+          "power": 174
+        },
+        {
+          "windSpeed": 6,
+          "power": 321
+        },
+        {
+          "windSpeed": 7,
+          "power": 532
+        },
+        {
+          "windSpeed": 8,
+          "power": 815
+        },
+        {
+          "windSpeed": 9,
+          "power": 1180
+        },
+        {
+          "windSpeed": 10,
+          "power": 1612
+        },
+        {
+          "windSpeed": 11,
+          "power": 1890
+        },
+        {
+          "windSpeed": 12,
+          "power": 2000
+        },
+        {
+          "windSpeed": 13,
+          "power": 2050
+        },
+        {
+          "windSpeed": 14,
+          "power": 2050
+        },
+        {
+          "windSpeed": 25,
+          "power": 2050
+        },
+        {
+          "windSpeed": 26,
+          "power": 0
+        }
+      ],
+      "thrustCoefficientCurve": [
+        {
+          "windSpeed": 0,
+          "thrust": 0
+        },
+        {
+          "windSpeed": 6,
+          "thrust": 0.25
+        },
+        {
+          "windSpeed": 10,
+          "thrust": 0.35
+        },
+        {
+          "windSpeed": 15,
+          "thrust": 0.45
+        },
+        {
+          "windSpeed": 25,
+          "thrust": 0.55
+        }
+      ],
+      "cutIn": 2,
+      "cutOut": 25
+    },
+    "available": true
+  }
+]
