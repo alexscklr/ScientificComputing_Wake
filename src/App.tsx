@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import WindMap from './components/WindMap';
 import { Turbine, TurbineType } from './types/Turbine';

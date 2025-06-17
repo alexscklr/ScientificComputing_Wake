@@ -20,7 +20,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
   const [formData, setFormData] = useState({ id, name, lat, long, type, available });
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-  const { mode, setMode } = useMode();
+  const { mode } = useMode();
 
   const [layoutMode, setLayoutMode] = useState(false);
   const [layoutData, setLayoutData] = useState({

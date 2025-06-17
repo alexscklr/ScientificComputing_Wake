@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import "../styles/TurbineTypesList.css";
 import turbinePresets from './../../assets/turbineTypes.json';
 import {
