@@ -1,5 +1,5 @@
 {
-  "name": "package",
+  "name": "WindTurbine_PowerModel",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -36,7 +36,7 @@
     "vite": "^6.3.0"
   },
   "build": {
-    "appId": "com.deinprojekt.app",
+    "appId": "com.WindTurbine_PowerModel.app",
     "directories": {
       "buildResources": "assets",
       "output": "release"
