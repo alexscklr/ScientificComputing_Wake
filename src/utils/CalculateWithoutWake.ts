@@ -2,7 +2,10 @@ import { RefObject } from "react";
 import { PowerCurvePoint, Turbine } from "../types/Turbine";
 import { SpeedUnits, WindroseData } from "../types/WindRose";
 
-const interpolatePower = (windSpeed: number, curve: PowerCurvePoint[]): number => {
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+export const interpolatePower = (windSpeed: number, curve: PowerCurvePoint[]): number => {
   const sortedCurve = [...curve].sort((a, b) => a.windSpeed - b.windSpeed);
 
   if (windSpeed <= sortedCurve[0].windSpeed) return sortedCurve[0].power;
@@ -21,7 +24,7 @@ const interpolatePower = (windSpeed: number, curve: PowerCurvePoint[]): number =
   return 0;
 };
 
-const GetPowerLaw = (speedOnH1: number, hubHeight: number, measureHeight: number, alpha: number): number => {
+export const GetPowerLaw = (speedOnH1: number, hubHeight: number, measureHeight: number, alpha: number): number => {
   return (speedOnH1 * Math.pow(hubHeight / measureHeight, alpha));
 }
 
@@ -61,6 +64,7 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
   const { windrose, turbines, progress, setTurbines, setProgress, energyWin } = functionProps;
 
   energyWin.current = 0; //reset energyWin
+  setProgress(0); //reset von progress
 
   if (!windrose || !windrose.data || !windrose.speedBins) {
     alert("Es ist ein Fehler mit der Windrose aufgekommen!");
@@ -72,7 +76,8 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
   }
 
   const updatedTurbines = turbines.map((turbine) => {
-    setProgress(progress + turbines.indexOf(turbine) + 1);
+    setProgress(turbines.indexOf(turbine) + 1);
+    console.log(`Progress: ${progress}`);
     if (!turbine.available || turbine.type.name === 'DefaultNull') {
       return {
         ...turbine,
@@ -107,7 +112,6 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
     energyWin.current += totalPower;
 
     console.log("Finished: " + windrose.speedUnit);
-
     return {
       ...turbine,
       powerWithoutWake: totalPower,

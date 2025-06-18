@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Turbine } from '../../types/Turbine';
 import { WindroseData } from '../../types/WindRose';
 import { calculateWithoutWake } from '../../utils/CalculateWithoutWake';
+import { calculateWithWake } from '../../utils/CalculateWithWake'; // 👈 wichtig
 import '../styles/CalculatePower.css';
 
 interface CalculatePowerProps {
@@ -21,8 +22,27 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
   const energyWin = useRef<number>(0);
 
   const handleCalculation = () => {
+    setProgress(0); // Reset Progress
     if (tab === 'noWake') {
-      calculateWithoutWake({ windrose, turbines, progress, setTurbines, setProgress, energyWin, elevation: windrose.elevation });
+      calculateWithoutWake({
+        windrose,
+        turbines,
+        progress,
+        setTurbines,
+        setProgress,
+        energyWin,
+        elevation: windrose.elevation,
+      });
+    } else if (tab === 'wake') {
+      calculateWithWake({
+        windrose,
+        turbines,
+        progress,
+        setTurbines,
+        setProgress,
+        energyWin,
+        elevation: windrose.elevation,
+      });
     }
   };
 
@@ -35,8 +55,11 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
         >
           Ohne Wake
         </button>
-        <button className="tab-btn disabled" disabled>
-          Mit Wake (bald)
+        <button
+          className={`tab-btn ${tab === 'wake' ? 'active' : ''}`}
+          onClick={() => setTab('wake')}
+        >
+          Mit Wake
         </button>
       </div>
 
@@ -53,26 +76,32 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
         </div>
       )}
 
-      <div className='result-card'>
-        Gesamtenergiegewinn: {Math.round(energyWin.current*100)/100} kW
+      <div className="result-card">
+        Gesamtenergiegewinn: {Math.round(energyWin.current * 100) / 100} kW
       </div>
 
-      <hr style={{width: '61.8%'}}/>
+      <hr style={{ width: '61.8%' }} />
 
       <div className="result-wrapper">
-        {turbines.map((turbine) =>
-          turbine.powerWithoutWake ? (
-            <div className="result-card" key={turbine.id}>
-              <span className="result-name">{turbine.name}</span>
+        {turbines.map((turbine) => (
+          <div className="result-card" key={turbine.id}>
+            <span className="result-name">{turbine.name}</span>
+            {tab === 'noWake' && turbine.powerWithoutWake !== undefined && (
               <span className="result-power">
-                🌬️ {turbine.powerWithoutWake.toFixed(2)} kW
+                🌬️ {turbine.powerWithoutWake.toFixed(2)} kW (ohne Wake)
               </span>
-            </div>
-          ) : null
-        )}
+            )}
+            {tab === 'wake' && turbine.powerWithWake !== undefined && (
+              <span className="result-power">
+                💨 {turbine.powerWithWake.toFixed(2)} kW (mit Wake)
+              </span>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 export default CalculatePower;
+

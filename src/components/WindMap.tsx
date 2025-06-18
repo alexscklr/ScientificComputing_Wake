@@ -90,7 +90,8 @@ const WindMap: React.FC<WindMapProps> = ({ turbines, activeTurbine, setMapCenter
               {turbine?.type?.name}<br />
               {turbine.lat.toFixed(5)}, {turbine.long.toFixed(5)}<br />
               <p style={{ color: 'green', marginTop: '5%' }}>
-                {turbine.powerWithoutWake ? turbine.powerWithoutWake.toFixed(2) + 'kW' : ''}
+                {turbine.powerWithoutWake ? turbine.powerWithoutWake.toFixed(2) + 'kW' : ''} <br />
+                {turbine.powerWithWake ? turbine.powerWithWake.toFixed(2) + 'kW' : ''}
               </p>
             </Popup>
           </Marker>
