@@ -20,18 +20,17 @@ type SidebarProps = {
   activeTurbine: Turbine[];
   onSave: (turbine: Turbine) => void;
   onCancel: (id?: string) => void;
+  onDelete: (id: string) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel }) => {
+const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel, onDelete }) => {
   const { mode, setMode } = useMode();
   const [showBtns, setShowBtns] = useState<boolean>(false);
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
   const isResizing = useRef(false);
 
   const handleSave = (turbine: Turbine) => {
-    if (onSave) {
-      onSave(turbine);
-    }
+    onSave(turbine);
   };
 
   const handleCancel = () => {
@@ -42,6 +41,10 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
       onCancel(); // Wenn activeTurbine leer ist, setze es einfach auf ein leeres Array zurück
     }
   };
+
+  const handleDelete = (id: string) => {
+    onDelete(id);
+  }
 
   useEffect(() => { }, [mode]);
 
@@ -121,6 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
             available={true}
             onSave={(turbine: Turbine) => handleSave(turbine)} // Sichere Übergabe der spezifischen Turbine
             onCancel={handleCancel}
+            onDelete={handleDelete}
           />
         )}
         {(mode === Modes.Edit) && (
@@ -135,6 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
               available={at.available}
               onSave={(turbine: Turbine) => handleSave(turbine)}  // Sichere Übergabe der spezifischen Turbine
               onCancel={handleCancel}
+              onDelete={handleDelete}
             />
           ))
         )}

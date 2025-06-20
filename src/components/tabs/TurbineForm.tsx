@@ -14,9 +14,10 @@ interface TurbineFormProps {
   available: boolean;
   onSave: (turbine: Turbine) => void;
   onCancel: (id?: string) => void;
+  onDelete: (id: string) => void;
 }
 
-const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, available, onSave, onCancel }) => {
+const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, available, onSave, onCancel, onDelete }) => {
   const [formData, setFormData] = useState({ id, name, lat, long, type, available });
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
@@ -101,7 +102,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
     return turbines;
   };
 
-  const handleSave = () => {
+  const handleSave = (e: any) => {
+    e.preventDefault();
     // Prüfen, ob ein gültiger Typ ausgewählt wurde
     if (formData.type.name === 'DefaultNull') {
       setMessage('Bitte einen gültigen Typ auswählen!');
@@ -120,6 +122,10 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
   const handleCancel = () => {
     onCancel(formData.id);
   };
+
+  const handleDelete = () => {
+    onDelete(formData.id);
+  }
 
   return (
     <div className="turbine-form-container">
@@ -260,6 +266,12 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
         >
           ❌ Abbrechen
         </button>
+        {mode==='edit' && (<button
+          onClick={handleDelete}
+          className="turbine-form-btn delete"
+        >
+          🗑️ Delete
+        </button>)}
       </div>
     </div>
   );

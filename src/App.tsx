@@ -13,7 +13,7 @@ function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
   const [windroseData, setWindroseData] = useState<WindroseData>(NullWindrose);
   const [mapCenter, setMapCenter] = useState<Point>(new Point(51.6369, 8.234));
-  const [activeTurbine, setActiveTurbine] = useState<Turbine[]>([]); // Halte die aktive Turbine
+  const [activeTurbines, setActiveTurbines] = useState<Turbine[]>([]); // Halte die aktive Turbine
   const { mode, setMode } = useMode(); // Aktuellen Modus der Sidebar
 
   const handleMapClick = (lat: number, long: number) => {
@@ -25,9 +25,9 @@ function App() {
       long,
       available: true,
     };
-  
+
     // Setze activeTurbine mit der neuen Turbine
-    setActiveTurbine([newTurbine]);
+    setActiveTurbines([newTurbine]);
     setMode(Modes.New); // Setze den Modus auf "New"
   };
 
@@ -36,9 +36,9 @@ function App() {
     const newTurbine: Turbine = { ...turbine };
     setTurbines((prev) => [...prev, newTurbine]);
     setMode(Modes.Edit); // Zurück zur Toolbar
-    setActiveTurbine([newTurbine]); // Setze die neue Turbine als aktive Turbine
+    setActiveTurbines([newTurbine]); // Setze die neue Turbine als aktive Turbine
   };
-  
+
 
   const editTurbine = (id: string, shiftPressed: boolean) => {
     const turbineToEdit = turbines.find((turbine) => turbine.id === id);
@@ -46,11 +46,11 @@ function App() {
 
     if (shiftPressed) {
       // Wenn Shift gedrückt wurde → zur Liste hinzufügen
-      setActiveTurbine(prev => prev.filter(t => t.id !== id));
-      setActiveTurbine(prev => [...prev, turbineToEdit]);
+      setActiveTurbines(prev => prev.filter(t => t.id !== id));
+      setActiveTurbines(prev => [...prev, turbineToEdit]);
     } else {
       // Sonst normale Einzel-Auswahl
-      setActiveTurbine([turbineToEdit]);
+      setActiveTurbines([turbineToEdit]);
       setMode(Modes.Edit); // Wechseln in Edit-Modus
     }
   };
@@ -58,14 +58,14 @@ function App() {
   const cancelEdit = (id?: string) => {
     // Wenn eine ID übergeben wurde, filtere die Turbine heraus
     if (id) {
-      setActiveTurbine(prev => prev.filter(t => t.id !== id));
+      setActiveTurbines(prev => prev.filter(t => t.id !== id));
     } else {
       // Wenn keine ID übergeben wurde, setze activeTurbine auf ein leeres Array zurück
-      setActiveTurbine([]);
+      setActiveTurbines([]);
       setMode(Modes.Toolbar);
     }
   };
-  
+
 
   const updateTurbine = (turbine: Turbine) => {
     setTurbines((prevTurbines) =>
@@ -74,26 +74,39 @@ function App() {
         t.id === turbine.id ? { ...t, ...turbine } : t
       )
     );
-    setActiveTurbine(prev => prev.filter(t => t.id !== turbine.id));
+    setActiveTurbines(prev => prev.filter(t => t.id !== turbine.id));
   };
-  
-  
 
-  const dragTurbine = (id: string, newLat: number, newLng: number) => {
+  const deleteTurbine = (id: string) => {
+    setTurbines(prevTurbines => prevTurbines.filter(t => t.id !== id));
+
+    setActiveTurbines(prevActives => prevActives.filter(t => t.id !== id));
+  };
+
+
+
+
+  const dragTurbine = (id: string, newLat: number, newLng: number, shiftPressed: boolean) => {
     const turbine = turbines.find(t => t.id === id);
     if (!turbine) return;
 
-    // Erzeuge den Shift-Vektor
     const shift = calculateShiftVector(turbine.lat, turbine.long, newLat, newLng);
 
     setTurbines(prevTurbines => {
-      // Liste der IDs der aktiven Turbinen + neu gezogene Turbine
-      const activeIds = [...activeTurbine.map(t => t.id)];
-      if (!activeIds.includes(id)) {
-        activeIds.push(id);
+      let activeIds: string[];
+
+      if (shiftPressed) {
+        // Shift gedrückt → aktuelle Auswahl + neue Turbine
+        const ids = [...activeTurbines.map(t => t.id)];
+        if (!ids.includes(id)) {
+          ids.push(id);
+        }
+        activeIds = ids;
+      } else {
+        // Kein Shift → nur die gezogene Turbine ist aktiv
+        activeIds = [id];
       }
 
-      // Turbinen aktualisieren
       const updatedTurbines = prevTurbines.map(t => {
         if (activeIds.includes(t.id)) {
           const moved = applyShiftVector(t.lat, t.long, shift);
@@ -106,15 +119,15 @@ function App() {
         return t;
       });
 
-      // Aktualisierte aktive Turbinen extrahieren und setzen
       const updatedActiveTurbines = updatedTurbines.filter(t => activeIds.includes(t.id));
-      setActiveTurbine(updatedActiveTurbines);
+      setActiveTurbines(updatedActiveTurbines);
 
       return updatedTurbines;
     });
 
-    setMode(Modes.Edit); // Im Edit-Modus bleiben
+    setMode(Modes.Edit);
   };
+
 
   return (
     <div style={{ display: 'flex', height: '100vh', maxWidth: '100%' }}>
@@ -122,7 +135,7 @@ function App() {
       <WindMap
         turbines={turbines}
         setMapCenter={setMapCenter}
-        activeTurbine={activeTurbine}
+        activeTurbines={activeTurbines}
         onAddTurbine={handleMapClick}
         onEditTurbine={editTurbine}
         onDragTurbine={dragTurbine}
@@ -135,9 +148,10 @@ function App() {
         mapCenter={mapCenter}
         windroseData={windroseData}
         setWindroseData={setWindroseData}
-        activeTurbine={activeTurbine}
+        activeTurbine={activeTurbines}
         onSave={mode === Modes.New ? saveNewTurbine : updateTurbine}
         onCancel={cancelEdit}
+        onDelete={deleteTurbine}
       />
     </div>
   );
