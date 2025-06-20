@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, act } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Turbine } from '../types/Turbine';
@@ -132,10 +132,15 @@ const WindMap: React.FC<WindMapProps> = ({ turbines, activeTurbines, setMapCente
               <hr style={{ marginTop: '0' }} />
               {turbine?.type?.name}<br />
               {turbine.lat.toFixed(5)}, {turbine.long.toFixed(5)}<br />
-              <p style={{ color: 'green', marginTop: '5%' }}>
-                {turbine.powerWithoutWake ? turbine.powerWithoutWake.toFixed(2) + 'kW' : ''} <br />
-                {turbine.powerWithWake ? turbine.powerWithWake.toFixed(2) + 'kW' : ''}
-              </p>
+              <span style={{ color: 'green', marginTop: '5%' }}>
+                {turbine.powerWithoutWake ? turbine.powerWithoutWake.toFixed(2) + 'kW' : ''}<br />
+              </span>
+              <span style={{ color: 'red', marginTop: '5%' }}>
+                {turbine.powerWithWake ? turbine.powerWithWake.toFixed(2) + 'kW ' : ''}
+              </span>
+              <span style={{ color: 'orange', marginTop: '5%' }}>
+                {turbine.powerWithWake && turbine.powerWithoutWake ? '( - ' + ((1-turbine.powerWithWake/turbine.powerWithoutWake)*100).toFixed(2) + '% )' : ''}
+              </span>
             </Popup>
           </Marker>
         );

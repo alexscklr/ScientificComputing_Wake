@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Turbine } from '../../types/Turbine';
 import { WindroseData } from '../../types/WindRose';
 import { calculateWithoutWake } from '../../utils/CalculateWithoutWake';
@@ -14,6 +14,7 @@ interface CalculatePowerProps {
 
 const CalculatePower: React.FC<CalculatePowerProps> = ({
   turbines,
+  setTurbines,
   windrose,
 }) => {
   const energyWinRaw = useRef<number>(0);
@@ -25,25 +26,42 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
   const [turbines1, setTurbines1] = useState<Turbine[]>(turbines);
   const [turbines2, setTurbines2] = useState<Turbine[]>(turbines);
 
-  const combinedTurbines = useMemo(() => {
-    if (turbines1.length === 0 && turbines2.length === 0) return [];
+  useEffect(() => {
+    setTurbines1(turbines);
+    setTurbines2(turbines);
+  }, [turbines]);
 
-    // Falls einer der Arrays noch leer ist, gib den anderen zurück
-    if (turbines1.length === 0) return turbines2;
-    if (turbines2.length === 0) return turbines1;
+
+  useEffect(() => {
+    if (turbines1.length === 0 && turbines2.length === 0) {
+      setTurbines([]); // Falls beide leer sind, setze Parent auch leer
+      return;
+    }
+
+    // Falls einer der Arrays leer ist, gib den anderen zurück
+    if (turbines1.length === 0) {
+      setTurbines(turbines2);
+      return;
+    }
+    if (turbines2.length === 0) {
+      setTurbines(turbines1);
+      return;
+    }
 
     // Map von turbines2 nach id für schnelles Nachschlagen
     const map2 = new Map(turbines2.map(t => [t.id, t]));
 
     // Kombiniere turbines1 und turbines2 anhand id
-    return turbines1.map(t1 => {
+    const combined = turbines1.map(t1 => {
       const t2 = map2.get(t1.id);
       return {
         ...t1,
         powerWithWake: t2?.powerWithWake ?? 0,
-        // Wenn du weitere Werte aus t2 brauchst, hier ergänzen
+        // Falls du weitere Felder brauchst, ergänze hier
       };
     });
+
+    setTurbines(combined);
   }, [turbines1, turbines2]);
 
 
@@ -120,11 +138,11 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
           Gesamtenergiegewinn: <br />
           🌬️ Ohne Wake: {(Math.round(energyWinRaw.current * 100) / 100).toFixed(2)} kW<br />
           💨 Mit Wake: {(Math.round(energyWinWake.current * 100) / 100).toFixed(2)} kW<br />
-          <span style={{color: 'red'}}>Verlust von {(Math.round((1-energyWinWake.current/energyWinRaw.current) * 100)).toFixed(2)} %</span>
+          <span style={{ color: 'red' }}>Verlust von {(Math.round((1 - energyWinWake.current / energyWinRaw.current) * 100)).toFixed(2)} %</span>
         </div>
 
         <div className="result-wrapper">
-          {combinedTurbines.map((turbine) => (
+          {turbines.map((turbine) => (
             <div className="result-card" key={turbine.id}>
               <span className={turbine.available ? "result-name" : "result-name unavailable"}>{turbine.name}</span>
               {'powerWithoutWake' in turbine && turbine.powerWithoutWake !== undefined && (
