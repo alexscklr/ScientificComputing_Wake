@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Turbine } from '../../types/Turbine';
 import { WindroseData } from '../../types/WindRose';
 import { calculateWithoutWake } from '../../utils/CalculateWithoutWake';
@@ -14,92 +14,135 @@ interface CalculatePowerProps {
 
 const CalculatePower: React.FC<CalculatePowerProps> = ({
   turbines,
-  setTurbines,
   windrose,
 }) => {
-  const [progress, setProgress] = useState<number>(0);
-  const [tab, setTab] = useState<'noWake' | 'wake'>('noWake');
-  const energyWin = useRef<number>(0);
+  const energyWinRaw = useRef<number>(0);
+  const energyWinWake = useRef<number>(0);
 
-  const handleCalculation = () => {
-    setProgress(0); // Reset Progress
-    if (tab === 'noWake') {
-      calculateWithoutWake({
-        windrose,
-        turbines,
-        progress,
-        setTurbines,
-        setProgress,
-        energyWin,
-        elevation: windrose.elevation,
-      });
-    } else if (tab === 'wake') {
-      calculateWithWake({
-        windrose,
-        turbines,
-        progress,
-        setTurbines,
-        setProgress,
-        energyWin,
-        elevation: windrose.elevation,
-      });
-    }
-  };
+  const [wakeDecayConst, setWakeDecayConst] = useState<number>(0.08);
+  const [maxWakeDistance, setMaxWakeDistance] = useState<number>(5);
+
+  const [turbines1, setTurbines1] = useState<Turbine[]>(turbines);
+  const [turbines2, setTurbines2] = useState<Turbine[]>(turbines);
+
+  const combinedTurbines = useMemo(() => {
+    if (turbines1.length === 0 && turbines2.length === 0) return [];
+
+    // Falls einer der Arrays noch leer ist, gib den anderen zurück
+    if (turbines1.length === 0) return turbines2;
+    if (turbines2.length === 0) return turbines1;
+
+    // Map von turbines2 nach id für schnelles Nachschlagen
+    const map2 = new Map(turbines2.map(t => [t.id, t]));
+
+    // Kombiniere turbines1 und turbines2 anhand id
+    return turbines1.map(t1 => {
+      const t2 = map2.get(t1.id);
+      return {
+        ...t1,
+        powerWithWake: t2?.powerWithWake ?? 0,
+        // Wenn du weitere Werte aus t2 brauchst, hier ergänzen
+      };
+    });
+  }, [turbines1, turbines2]);
+
+
+  const handleNoWakeCalc = () => {
+    calculateWithoutWake({
+      windrose,
+      turbines: turbines1,
+      setTurbines: setTurbines1,
+      energyWin: energyWinRaw,
+      elevation: windrose.elevation,
+    });
+  }
+  const handleWakeCalc = () => {
+    calculateWithWake({
+      windrose,
+      turbines: turbines2,
+      setTurbines: setTurbines2,
+      energyWin: energyWinWake,
+      elevation: windrose.elevation,
+      wakeDecayConstant: wakeDecayConst,
+      maxWakeDistance: maxWakeDistance,
+    });
+  }
+
+  const handleCalculation = (event: any) => {
+    event.preventDefault();
+    setTurbines1(turbines);
+    setTurbines2(turbines);
+    handleNoWakeCalc();
+    handleWakeCalc();
+  }
 
   return (
     <div className="calc-container">
-      <div className="tab-wrapper">
-        <button
-          className={`tab-btn ${tab === 'noWake' ? 'active' : ''}`}
-          onClick={() => setTab('noWake')}
-        >
-          Ohne Wake
-        </button>
-        <button
-          className={`tab-btn ${tab === 'wake' ? 'active' : ''}`}
-          onClick={() => setTab('wake')}
-        >
-          Mit Wake
-        </button>
-      </div>
 
-      <button className="calculate-btn" onClick={handleCalculation}>
-        🔍 Berechne {tab === 'noWake' ? 'ohne Wake' : 'mit Wake'}
-      </button>
-
-      {progress > 0 && progress < turbines.length && (
-        <div className="progress-bar-wrapper">
-          <div
-            className="progress-bar"
-            style={{ width: `${(progress / turbines.length) * 100}%` }}
-          />
-        </div>
-      )}
-
-      <div className="result-card">
-        Gesamtenergiegewinn: {Math.round(energyWin.current * 100) / 100} kW
-      </div>
-
-      <hr style={{ width: '61.8%' }} />
-
-      <div className="result-wrapper">
-        {turbines.map((turbine) => (
-          <div className="result-card" key={turbine.id}>
-            <span className="result-name">{turbine.name}</span>
-            {tab === 'noWake' && turbine.powerWithoutWake !== undefined && (
-              <span className="result-power">
-                🌬️ {turbine.powerWithoutWake.toFixed(2)} kW (ohne Wake)
-              </span>
-            )}
-            {tab === 'wake' && turbine.powerWithWake !== undefined && (
-              <span className="result-power">
-                💨 {turbine.powerWithWake.toFixed(2)} kW (mit Wake)
-              </span>
-            )}
+      {/* Berechnung mit Wake */}
+      <div className="wake-section">
+        <h3>Berechnung mit Wake-Effekten</h3>
+        <form onSubmit={handleCalculation} className="parameter-form">
+          <div className="form-group">
+            <label>
+              Wake-Decay-Constant k
+              <input
+                type="number"
+                min="0"
+                max="1"
+                step="0.005"
+                value={wakeDecayConst}
+                onChange={(e) => setWakeDecayConst(e.target.valueAsNumber)}
+                required
+              />
+            </label>
+            <label>
+              MaxWakeDistance als Vielfaches des Rotorradius
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={maxWakeDistance}
+                onChange={(e) => setMaxWakeDistance(e.target.valueAsNumber)}
+                required
+              />
+            </label>
           </div>
-        ))}
+          <button type="submit" className="calculate-btn">
+            🔍 Berechne mit Wake
+          </button>
+        </form>
+      </div>
+
+      {/* Ergebnisanzeige */}
+      <div className="results-container">
+        <div className="result-card total-energy">
+          Gesamtenergiegewinn: <br />
+          🌬️ Ohne Wake: {(Math.round(energyWinRaw.current * 100) / 100).toFixed(2)} kW<br />
+          💨 Mit Wake: {(Math.round(energyWinWake.current * 100) / 100).toFixed(2)} kW<br />
+          <span style={{color: 'red'}}>Verlust von {(Math.round((1-energyWinWake.current/energyWinRaw.current) * 100)).toFixed(2)} %</span>
+        </div>
+
+        <div className="result-wrapper">
+          {combinedTurbines.map((turbine) => (
+            <div className="result-card" key={turbine.id}>
+              <span className={turbine.available ? "result-name" : "result-name unavailable"}>{turbine.name}</span>
+              {'powerWithoutWake' in turbine && turbine.powerWithoutWake !== undefined && (
+                <span className={turbine.available ? "result-power" : "result-power unavailable"}>
+                  🌬️ {turbine.powerWithoutWake.toFixed(2)} kW (ohne Wake)
+                </span>
+              )}
+              {'powerWithWake' in turbine && turbine.powerWithWake !== undefined && (
+                <span className={turbine.available ? "result-power" : "result-power unavailable"} style={{ marginLeft: '1rem' }}>
+                  💨 {turbine.powerWithWake.toFixed(2)} kW (mit Wake)
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
+
   );
 };
 

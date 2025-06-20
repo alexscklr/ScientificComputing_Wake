@@ -3,6 +3,7 @@ import '../styles/WindRoseComp.css';
 import { WindroseData, SpeedUnits, NullWindrose } from '../../types/WindRose';
 import { parseCsvToWindrose, convertToWindrose } from '../../utils/UploadWindroseCSV';
 import { convertSpeedUnits } from '../../utils/CalculateWithoutWake';
+import ReactECharts from 'echarts-for-react';
 
 interface WindRoseCompProps {
   windroseData?: WindroseData;
@@ -86,10 +87,10 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
   const changeSpeedUnit = (newUnit: string) => {
     if (!windroseData || windroseData.speedUnit === newUnit) return;
 
-    let newSpeedBins : [number, number][] = windroseData.speedBins.map(([v1, v2]) => [
-        Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
-        isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
-      ])
+    let newSpeedBins: [number, number][] = windroseData.speedBins.map(([v1, v2]) => [
+      Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+      isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
+    ])
 
     setWindroseData({
       ...windroseData,
@@ -158,44 +159,15 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
           </label>
         </div>
-        
+
         <button type="submit">Daten abrufen</button>
       </form>
 
-      {windroseData && (windroseData != NullWindrose) ? (
+      {windroseData && windroseData !== NullWindrose ? (
         <>
-          <div style={{ maxHeight: '500px', width: '100%', overflowY: 'auto' }}>
-            <h3>{windroseData.name}</h3>
-            <table className="windrose-table">
-              <thead>
-                <tr>
-                  <th>Richtung</th>
-                  {windroseData.speedBins.map((bin, i) => (
-                    <th key={i} >
-                      {isNaN(bin[1]) ? `${bin[0]}+` : `${bin[0]}–${bin[1]}`} {windroseData.speedUnit}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {windroseData.data.map((entry, index) => (
-                  <tr key={index}>
-                    <td >
-                      {entry.directionRange[0].toFixed(0)}–{entry.directionRange[1].toFixed(0)}
-                    </td>
-                    {entry.frequencies.map((freq, i) => (
-                      <td key={i} >{freq.toFixed(3)}</td>
-                    ))}
-                  </tr>
-                ))}
-                <tr>
-                  <td>
-                    <strong>Calm</strong>
-                  </td>
-                  <td colSpan={windroseData.speedBins.length}>{windroseData.calmFrequency.toFixed(3)} %</td>
-                </tr>
-              </tbody>
-            </table>
+          <h3 id="windrose-title">{windroseData.name}</h3>
+          <div className="chart-div">
+            <ReactECharts option={getWindroseChartOption(windroseData)} className="chart-container" />
           </div>
           <p>
             Data Count : {dataCount.current} | Errors :{' '}
@@ -205,8 +177,61 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
       ) : (
         <p className="no-file-message">Bitte lade eine CSV-Datei hoch.</p>
       )}
+
     </div>
   );
 };
+
+function getWindroseChartOption(windroseData: WindroseData) {
+  // Labels für Richtungsbereiche
+  const directions = windroseData.data.map(entry => {
+    const [start, end] = entry.directionRange;
+    return `${start}°–${end}°`;
+  });
+  const binCount = windroseData.speedBins.length;
+
+  const seriesData = [];
+
+  for (let binIdx = 0; binIdx < binCount; binIdx++) {
+    const bin = windroseData.speedBins[binIdx];
+    const binLabel = `${bin[0]}-${bin[1] === Infinity ? '+' : bin[1]} ${windroseData.speedUnit}`;
+
+    // Frequenzen je Richtung für das aktuelle Speed-Bin
+    const values = windroseData.data.map(entry => entry.frequencies[binIdx] ?? 0);
+
+    seriesData.push({
+      name: binLabel,
+      type: 'bar',
+      coordinateSystem: 'polar',  // <--- Wichtig!
+      stack: 'wind',
+      data: values,
+    });
+  }
+
+  return {
+  legend: {
+    bottom: 20,
+    type: 'scroll',
+    orient: 'horizontal',
+    left: 'center',
+    itemWidth: 20,
+    itemHeight: 14,
+  },
+  polar: {
+    radius: '70%',
+    center: ['50%', '50%'], // Plot etwas nach oben
+  },
+  angleAxis: {
+    type: 'category',
+    data: directions,
+    startAngle: 90,
+  },
+  radiusAxis: {
+    min: 0,
+  },
+  series: seriesData,
+};
+}
+
 
 export default WindRoseComp;

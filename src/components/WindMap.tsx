@@ -69,7 +69,7 @@ const WindMap: React.FC<WindMapProps> = ({ turbines, activeTurbine, setMapCenter
           <Marker
             key={turbine.id}
             position={[turbine.lat, turbine.long]}
-            icon={isTurbineActive ? windTurbineIcon('green') : windTurbineIcon('red')}
+            icon={turbine.available ? (isTurbineActive ? windTurbineIcon('green') : windTurbineIcon('red')) : windTurbineIcon('grey')}
             draggable={true}
             eventHandlers={{
               dragend: (e) => {

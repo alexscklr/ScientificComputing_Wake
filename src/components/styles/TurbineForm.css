@@ -15,12 +15,18 @@
 .turbine-form-label {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.3rem;
     color: #333;
 }
 
 .turbine-form-label.flexRow {
     flex-direction: row;
+}
+
+.turbine-form-label > input[type="text"],
+.turbine-form-label > input[type="number"]{
+    width: 80%;
 }
 
 

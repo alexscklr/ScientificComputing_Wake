@@ -2,9 +2,8 @@ import { RefObject } from "react";
 import { ThrustCurvePoint, Turbine } from "../types/Turbine";
 import { SpeedUnits, WindroseData } from "../types/WindRose";
 import { convertSpeedUnits, GetPowerLaw, interpolatePower } from "./CalculateWithoutWake";
-import { haversineDistance } from "./geoUtils";
 
-const WAKE_DECAY_CONSTANT = 0.05;
+let WAKE_DECAY_CONSTANT = 0.08;
 
 const degToRad = (deg: number): number => (deg * Math.PI) / 180;
 
@@ -27,16 +26,14 @@ const getThrustCoefficient = (windSpeed: number, thrustCurve?: ThrustCurvePoint[
   return 0.8;
 };
 
-const calculateWakeDeficit = (dist: number, lateralOffset: number, rotorRadius: number, ct: number): number => {
+const calculateWakeDeficit = (dist: number, rotorRadius: number, ct: number): number => {
   const r = rotorRadius;
   const k = WAKE_DECAY_CONSTANT;
-  const wakeRadius = r + k * dist;
-
-  if (Math.abs(lateralOffset) > wakeRadius) return 0; // Turbine liegt außerhalb des Wake-Kegels
 
   const a = 0.5 * (1 - Math.sqrt(1 - ct));
   return a / ((1 + k * dist / r) ** 2);
 };
+
 
 const rotateCoordinates = (x: number, y: number, angleDeg: number): [number, number] => {
   const angleRad = degToRad(angleDeg);
@@ -49,15 +46,23 @@ const rotateCoordinates = (x: number, y: number, angleDeg: number): [number, num
 interface FunctionProps {
   windrose: WindroseData | undefined,
   turbines: Turbine[],
-  progress: number,
   setTurbines: (t: Turbine[]) => void,
-  setProgress: (value: number) => void,
   energyWin: RefObject<number>,
-  elevation: number
+  elevation: number,
+  wakeDecayConstant: number,
+  maxWakeDistance: number,
 }
 export const calculateWithWake = (functionProps: FunctionProps) => {
-  const { windrose, turbines, progress, setTurbines, setProgress, energyWin } = functionProps;
+  const {
+    windrose,
+    turbines,
+    setTurbines,
+    energyWin,
+    wakeDecayConstant,
+    maxWakeDistance,
+  } = functionProps;
 
+  WAKE_DECAY_CONSTANT = wakeDecayConstant;
   energyWin.current = 0;
 
   if (!windrose || !windrose.data || !windrose.speedBins) {
@@ -82,20 +87,31 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
       const speedBin = windrose.speedBins[speedBinIndex];
       if (!speedBin) return;
 
-      const avgWindSpeed = (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
+      const avgWindSpeed =
+        (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
+
       let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
       windSpeedMs = GetPowerLaw(windSpeedMs, turbines[0].type.hubHeight, windrose.elevation, 0.14);
 
       const freq = freqPercent / 100;
       if (windSpeedMs <= 0 || freq <= 0) return;
 
-      // Alle Turbinen relativ zur Windrichtung ausrichten
-      const projected = [...updatedTurbines].map(t => {
-        const [x, y] = rotateCoordinates(t.long, t.lat, -windDirDeg);
+      // Nur aktive Turbinen berücksichtigen
+      const activeTurbines = updatedTurbines.filter((t) => t.available !== false);
+
+      const latRef = turbines[0].lat;
+
+      const projected = [...activeTurbines].map((t) => {
+        const metersPerDegLat = 111_320;
+        const metersPerDegLon = 111_320 * Math.cos(degToRad(latRef));
+
+        const xMeters = (t.long - turbines[0].long) * metersPerDegLon;
+        const yMeters = (t.lat - turbines[0].lat) * metersPerDegLat;
+
+        const [x, y] = rotateCoordinates(xMeters, yMeters, -windDirDeg);
         return { ...t, xRel: x, yRel: y };
       });
 
-      // Sortiere nach x (Upwind -> Downwind)
       projected.sort((a, b) => a.xRel - b.xRel);
 
       const wakeAdjusted = projected.map((t, idx, all) => {
@@ -108,13 +124,16 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
           if (dx <= 0) continue;
 
           const rotorRadius = upwind.type.rotorDiameter / 2;
+          const MAX_WAKE_DISTANCE = maxWakeDistance * rotorRadius;
+          if (dx > MAX_WAKE_DISTANCE) continue;
+
           const ct = getThrustCoefficient(windSpeedMs, upwind.type.thrustCoefficientCurve);
-          const deficit = calculateWakeDeficit(dx, dy, rotorRadius, ct);
+          const deficit = calculateWakeDeficit(dx, dy, ct);
 
           totalDeficitSquared += deficit ** 2;
         }
 
-        const totalDeficit = Math.sqrt(totalDeficitSquared);
+        const totalDeficit = Math.min(0.95, Math.sqrt(totalDeficitSquared));
         const effectiveWind = windSpeedMs * (1 - totalDeficit);
 
         const power =
@@ -129,21 +148,24 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
         };
       });
 
-      // Summiere Energie je Turbine
-      wakeAdjusted.forEach(t => {
-        const index = updatedTurbines.findIndex(orig => orig.id === t.id);
+      // Energie zur richtigen Turbine zurückschreiben
+      wakeAdjusted.forEach((t) => {
+        const index = updatedTurbines.findIndex((orig) => orig.id === t.id);
         updatedTurbines[index].powerWithWake! += t.addedPower;
       });
     });
   });
 
-  // Calm-Frequency berücksichtigen
-  const calmFactor = windrose.calmFrequency / 100;
-  updatedTurbines.forEach(t => {
-    t.powerWithWake! *= (1 - calmFactor);
-    energyWin.current! += t.powerWithWake!;
+  // Calm-Factor und Setzen von powerWithWake = 0 bei inaktiven
+  updatedTurbines.forEach((t) => {
+    if (t.available === false) {
+      t.powerWithWake = 0;
+    } else {
+      t.powerWithWake! *= 1 - windrose.calmFrequency / 100;
+      energyWin.current! += t.powerWithWake!;
+    }
   });
 
   setTurbines(updatedTurbines);
-  setProgress(100);
 };
+

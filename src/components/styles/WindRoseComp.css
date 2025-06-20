@@ -90,35 +90,6 @@ button:hover {
 
 
 
-.windrose-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 0.95rem;
-}
-
-.windrose-table th,
-.windrose-table td {
-  padding: 8px;
-  text-align: center;
-  width: fit-content;
-  text-wrap: nowrap;
-}
-
-.windrose-table th {
-  background-color: #ecf0f1;
-  border: 1px solid #bbb;
-}
-
-.windrose-table td {
-  background-color: #fff;
-  border: 1px solid #ddd;
-}
-
-.windrose-table tr:nth-child(even) td {
-  background-color: #f9f9f9;
-}
-
 .no-file-message {
   color: #c0392b;
   font-style: italic;
@@ -132,4 +103,21 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+
+#windrose-title {
+  margin-bottom: 20px;
+}
+
+.chart-div {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.echarts-for-react.chart-container {
+  width: 100%;
+  min-height: 1000px;
 }

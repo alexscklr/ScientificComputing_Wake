@@ -2,7 +2,6 @@ import { RefObject } from "react";
 import { PowerCurvePoint, Turbine } from "../types/Turbine";
 import { SpeedUnits, WindroseData } from "../types/WindRose";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
 export const interpolatePower = (windSpeed: number, curve: PowerCurvePoint[]): number => {
@@ -54,30 +53,26 @@ export const convertSpeedUnits = (fromSpeed: number, fromUnit: SpeedUnits, toUni
 interface FunctionProps {
   windrose: WindroseData | undefined,
   turbines: Turbine[],
-  progress: number,
   setTurbines: (t: Turbine[]) => void,
-  setProgress: (value: number) => void,
   energyWin: RefObject<number>,
   elevation: number
 }
 export const calculateWithoutWake = (functionProps: FunctionProps) => {
-  const { windrose, turbines, progress, setTurbines, setProgress, energyWin } = functionProps;
+  const { windrose, turbines, setTurbines, energyWin } = functionProps;
 
-  energyWin.current = 0; //reset energyWin
-  setProgress(0); //reset von progress
+  energyWin.current = 0;
 
   if (!windrose || !windrose.data || !windrose.speedBins) {
     alert("Es ist ein Fehler mit der Windrose aufgekommen!");
     return;
   }
+
   if (!turbines || turbines.length < 1) {
     alert("Keine Windturbinen vorhanden");
     return;
   }
 
   const updatedTurbines = turbines.map((turbine) => {
-    setProgress(turbines.indexOf(turbine) + 1);
-    console.log(`Progress: ${progress}`);
     if (!turbine.available || turbine.type.name === 'DefaultNull') {
       return {
         ...turbine,
@@ -93,10 +88,11 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
         const speedBin = windrose.speedBins[i];
         if (!speedBin) return;
 
-        const avgWindSpeed = (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
+        const avgWindSpeed =
+          (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
+
         let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
         windSpeedMs = GetPowerLaw(windSpeedMs, turbine.type.hubHeight, windrose.elevation, 0.14);
-        
 
         if (windSpeedMs < cutIn || windSpeedMs > cutOut) return;
 
@@ -109,9 +105,9 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
     const calmFactor = windrose.calmFrequency / 100;
     totalPower *= (1 - calmFactor);
 
+    // Nur aufsummieren, wenn die Turbine aktiv ist
     energyWin.current += totalPower;
 
-    console.log("Finished: " + windrose.speedUnit);
     return {
       ...turbine,
       powerWithoutWake: totalPower,
@@ -120,3 +116,4 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
 
   setTurbines(updatedTurbines);
 };
+
