@@ -22,9 +22,12 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
 
   const [wakeDecayConst, setWakeDecayConst] = useState<number>(0.08);
   const [maxWakeDistance, setMaxWakeDistance] = useState<number>(5);
+  const [timeInHr, setTimeInHr] = useState<number>(1);
 
   const [turbines1, setTurbines1] = useState<Turbine[]>(turbines);
   const [turbines2, setTurbines2] = useState<Turbine[]>(turbines);
+
+  const [shouldCombineToggle, setShouldCombineToggle] = useState<boolean>(false);
 
   useEffect(() => {
     setTurbines1(turbines);
@@ -32,37 +35,25 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
   }, [turbines]);
 
 
+  // Combine nur auslösen, wenn beide Berechnungen abgeschlossen sind
   useEffect(() => {
-    if (turbines1.length === 0 && turbines2.length === 0) {
-      setTurbines([]); // Falls beide leer sind, setze Parent auch leer
-      return;
+    if (
+      turbines1.length > 0 &&
+      turbines2.length > 0
+    ) {
+      const map2 = new Map(turbines2.map(t => [t.id, t]));
+      const combined = turbines1.map(t1 => {
+        const t2 = map2.get(t1.id);
+        return {
+          ...t1,
+          powerWithoutWake: t1.powerWithoutWake ?? 0,
+          powerWithWake: t2?.powerWithWake ?? 0,
+        };
+      });
+      setTurbines(combined);
     }
+  }, [shouldCombineToggle]);
 
-    // Falls einer der Arrays leer ist, gib den anderen zurück
-    if (turbines1.length === 0) {
-      setTurbines(turbines2);
-      return;
-    }
-    if (turbines2.length === 0) {
-      setTurbines(turbines1);
-      return;
-    }
-
-    // Map von turbines2 nach id für schnelles Nachschlagen
-    const map2 = new Map(turbines2.map(t => [t.id, t]));
-
-    // Kombiniere turbines1 und turbines2 anhand id
-    const combined = turbines1.map(t1 => {
-      const t2 = map2.get(t1.id);
-      return {
-        ...t1,
-        powerWithWake: t2?.powerWithWake ?? 0,
-        // Falls du weitere Felder brauchst, ergänze hier
-      };
-    });
-
-    setTurbines(combined);
-  }, [turbines1, turbines2]);
 
 
   const handleNoWakeCalc = () => {
@@ -92,6 +83,7 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
     setTurbines2(turbines);
     handleNoWakeCalc();
     handleWakeCalc();
+    setShouldCombineToggle(!shouldCombineToggle);
   }
 
   return (
@@ -125,6 +117,17 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
                 required
               />
             </label>
+            <label>
+              Zeitraum der Energiegewinnung
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={timeInHr}
+                onChange={(e) => setTimeInHr(e.target.valueAsNumber)}
+                required
+              />
+            </label>
           </div>
           <button type="submit" className="calculate-btn">
             🔍 Berechne mit Wake
@@ -138,6 +141,7 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
           Gesamtenergiegewinn: <br />
           🌬️ Ohne Wake: {(Math.round(energyWinRaw.current * 100) / 100).toFixed(2)} kW<br />
           💨 Mit Wake: {(Math.round(energyWinWake.current * 100) / 100).toFixed(2)} kW<br />
+          Im Zeitraum von {timeInHr} Std.: {(energyWinWake.current*timeInHr).toFixed(2)} kWh<br />
           <span style={{ color: 'red' }}>Verlust von {(Math.round((1 - energyWinWake.current / energyWinRaw.current) * 100)).toFixed(2)} %</span>
         </div>
 
