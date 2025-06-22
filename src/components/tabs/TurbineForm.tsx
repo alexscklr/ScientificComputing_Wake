@@ -11,14 +11,15 @@ interface TurbineFormProps {
   long: number;
   name: string;
   type: TurbineType;
+  groundAreaID: string;
   available: boolean;
   onSave: (turbine: Turbine) => void;
   onCancel: (id?: string) => void;
   onDelete: (id: string) => void;
 }
 
-const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, available, onSave, onCancel, onDelete }) => {
-  const [formData, setFormData] = useState({ id, name, lat, long, type, available });
+const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, groundAreaID, available, onSave, onCancel, onDelete }) => {
+  const [formData, setFormData] = useState({ id, name, lat, long, type, groundAreaID, available });
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const { mode } = useMode();
@@ -32,8 +33,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
   });
 
   useEffect(() => {
-    setFormData({ id, name, lat, long, type, available });
-  }, [lat, long, name, type, available]);
+    setFormData({ id, name, lat, long, type, groundAreaID, available });
+  }, [lat, long, name, type, groundAreaID, available]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type: inputType, checked } = e.target;
@@ -94,7 +95,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
           name: `${formData.name}_${r}_${c}`,
           lat,
           long,
-          type: formData.type, // Vergewissere dich, dass hier der Typ korrekt zugewiesen wird
+          type: formData.type,
+          groundAreaID: formData.groundAreaID,
           available: true,
         });
       }
@@ -127,6 +129,9 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
     onDelete(formData.id);
   }
 
+
+
+
   return (
     <div className="turbine-form-container">
       <label className="turbine-form-label">
@@ -141,7 +146,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
       </label>
 
       <label className="turbine-form-label">
-        Typ:
+        TurbineType:
         <select
           value={getKeyForType(formData.type)}
           onChange={handleTypeChange}
@@ -266,7 +271,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, av
         >
           ❌ Abbrechen
         </button>
-        {mode==='edit' && (<button
+        {mode === 'edit' && (<button
           onClick={handleDelete}
           className="turbine-form-btn delete"
         >

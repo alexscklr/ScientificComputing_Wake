@@ -4,6 +4,7 @@ export interface Turbine {
   lat: number;
   long: number;
   type: TurbineType;
+  groundAreaID?: string;
   available: boolean;
   powerWithoutWake?: number;
   powerWithWake?: number;

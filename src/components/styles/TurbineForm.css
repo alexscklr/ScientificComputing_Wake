@@ -48,6 +48,7 @@
 .turbine-form-btn.save {
     background-color: #1976d2;
     flex-grow: 1;
+    position: relative;
 }
 
 .turbine-form-btn.cancel {

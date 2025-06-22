@@ -28,6 +28,10 @@ export const GetWindProfilePowerLaw = (speedOnH1: number, hubHeight: number, mea
   return (speedOnH1 * Math.pow(hubHeight / measureHeight, alpha));
 }
 
+export const GetWindProfileLogarithmic = (speedOnH1: number, hubHeight: number, measureHeight: number, z0: number) : number => {
+    return (speedOnH1 * Math.log(hubHeight/z0)/Math.log(measureHeight/z0));
+}
+
 export const interpolatePower = (windSpeed: number, curve: PowerCurvePoint[]): number => {
   const sortedCurve = [...curve].sort((a, b) => a.windSpeed - b.windSpeed);
 

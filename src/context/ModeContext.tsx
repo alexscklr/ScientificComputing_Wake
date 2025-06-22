@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type Mode = 'toolbar' | 'turbineTypes' | 'windrose' | 'new' | 'edit' | 'calculate';
+export type Mode = 'toolbar' | 'turbineTypes' | 'windrose' | 'new' | 'edit' | 'groundAreas' | 'calculate';
 
 export enum Modes {
   Toolbar = 'toolbar',
@@ -8,6 +8,7 @@ export enum Modes {
   Windrose = 'windrose',
   New = 'new',
   Edit = 'edit',
+  GroundAreas = 'groundAreas',
   Calculate = 'calculate'
 }
 

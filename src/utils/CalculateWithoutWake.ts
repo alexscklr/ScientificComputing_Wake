@@ -2,19 +2,21 @@ import { RefObject } from "react";
 import { Turbine } from "../types/Turbine";
 import { SpeedUnits, WindroseData } from "../types/WindRose";
 
-import { convertSpeedUnits, GetWindProfilePowerLaw, interpolatePower } from "./CalculationFunctions";
+import { convertSpeedUnits, GetWindProfileLogarithmic, GetWindProfilePowerLaw, interpolatePower } from "./CalculationFunctions";
+import { AreaFeature } from "../types/GroundArea";
 
 
 
 interface FunctionProps {
   windrose: WindroseData | undefined,
   turbines: Turbine[],
+  groundAreas : AreaFeature[];
   setTurbines: (t: Turbine[]) => void,
   energyWin: RefObject<number>,
   elevation: number
 }
 export const calculateWithoutWake = (functionProps: FunctionProps) => {
-  const { windrose, turbines, setTurbines, energyWin } = functionProps;
+  const { windrose, turbines, groundAreas, setTurbines, energyWin } = functionProps;
 
   energyWin.current = 0;
 
@@ -48,7 +50,9 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
           (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
 
         let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
-        windSpeedMs = GetWindProfilePowerLaw(windSpeedMs, turbine.type.hubHeight, windrose.elevation, 0.143);
+
+        const z0 = turbine.groundAreaID ? groundAreas.find((a) => a.properties.id === turbine.groundAreaID)?.properties.z0 ?? 0.03 : 0.03;
+        windSpeedMs = GetWindProfileLogarithmic(windSpeedMs, turbine.type.hubHeight, windrose.elevation, z0);
 
         if (windSpeedMs < cutIn || windSpeedMs > cutOut) return;
 

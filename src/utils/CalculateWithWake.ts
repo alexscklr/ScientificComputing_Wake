@@ -2,13 +2,10 @@ import { RefObject } from "react";
 import { ThrustCurvePoint, Turbine } from "../types/Turbine";
 import { SpeedUnits, WindroseData } from "../types/WindRose";
 
-import { convertSpeedUnits, GetWindProfilePowerLaw, interpolatePower } from "./CalculationFunctions";
-
-let WAKE_DECAY_CONSTANT = 0.08;
+import { convertSpeedUnits, GetWindProfileLogarithmic, interpolatePower } from "./CalculationFunctions";
+import { AreaFeature } from "../types/GroundArea";
 
 const degToRad = (deg: number): number => (deg * Math.PI) / 180;
-
-
 
 const getThrustCoefficient = (windSpeed: number, thrustCurve?: ThrustCurvePoint[]): number => {
   if (!thrustCurve || thrustCurve.length === 0) {
@@ -35,8 +32,7 @@ const getThrustCoefficient = (windSpeed: number, thrustCurve?: ThrustCurvePoint[
 };
 
 
-const calculateWakeDeficit = (dist: number, rotorRadius: number, ct: number): number => {
-  const k = WAKE_DECAY_CONSTANT;
+const calculateWakeDeficit = (dist: number, rotorRadius: number, ct: number, k: number): number => {
   ct = Math.max(0, Math.min(1, ct));
   const a = 0.5 * (1 - Math.sqrt(1 - ct));
   return a / ((1 + k * dist / rotorRadius) ** 2);
@@ -83,8 +79,8 @@ interface FunctionProps {
   setTurbines: (t: Turbine[]) => void;
   energyWin: RefObject<number>;
   elevation: number;
-  wakeDecayConstant: number;
   maxWakeDistance: number;
+  groundAreas: AreaFeature[];
 }
 
 export const calculateWithWake = (functionProps: FunctionProps) => {
@@ -93,11 +89,11 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
     turbines,
     setTurbines,
     energyWin,
-    wakeDecayConstant,
     maxWakeDistance,
+    groundAreas,
   } = functionProps;
 
-  WAKE_DECAY_CONSTANT = wakeDecayConstant;
+  
   energyWin.current = 0;
 
   if (!windrose || !windrose.data || !windrose.speedBins) {
@@ -126,28 +122,27 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
       const avgWindSpeed =
         (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
 
-      let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
-      windSpeedMs = GetWindProfilePowerLaw(windSpeedMs, turbines[0].type.hubHeight, windrose.elevation, 0.14);
+      let baseWindSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
 
       const freq = freqPercent / 100;
-      if (windSpeedMs <= 0 || freq <= 0) return;
+      if (baseWindSpeedMs <= 0 || freq <= 0) return;
 
-      const activeTurbines = updatedTurbines.filter((t) => t.available !== false);
+      const availableTurbines = updatedTurbines.filter((t) => t.available !== false);
 
-      // Koordinatenprojektion: Upwind-orientiert
+      // Koordinatenprojektion
       const avgLat = turbines.reduce((sum, t) => sum + t.lat, 0) / turbines.length;
       const avgLong = turbines.reduce((sum, t) => sum + t.long, 0) / turbines.length;
       const metersPerDegLat = 111_320;
       const metersPerDegLon = 111_320 * Math.cos(degToRad(avgLat));
 
-      const projected = [...activeTurbines].map((t) => {
+      const projected = [...availableTurbines].map((t) => {
         const xMeters = (t.long - avgLong) * metersPerDegLon;
         const yMeters = (t.lat - avgLat) * metersPerDegLat;
         const [x, y] = rotateCoordinates(xMeters, yMeters, -windDirDeg);
         return { ...t, xRel: x, yRel: y };
       });
 
-      // Sortieren entlang der Windrichtung (Upwind → Downwind)
+      // Upwind → Downwind sortieren
       projected.sort((a, b) => a.xRel - b.xRel);
 
       const wakeAdjusted = projected.map((t, idx, all) => {
@@ -160,14 +155,15 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
 
           if (dx <= 0) continue;
 
-          const rotorRadius = upwind.type.rotorDiameter / 2;  
+          const rotorRadius = upwind.type.rotorDiameter / 2;
           const MAX_WAKE_DISTANCE = maxWakeDistance * rotorRadius;
           if (dx > MAX_WAKE_DISTANCE) continue;
 
-          const ct = getThrustCoefficient(windSpeedMs, upwind.type.thrustCoefficientCurve);
-          const deficit = calculateWakeDeficit(dx, rotorRadius, ct);
+          const ct = getThrustCoefficient(baseWindSpeedMs, upwind.type.thrustCoefficientCurve);
+          const k = groundAreas.find(area => area.id === t.groundAreaID)?.properties.k || 0.08;
+          const deficit = calculateWakeDeficit(dx, rotorRadius, ct, k);
 
-          const wakeRadius = rotorRadius + WAKE_DECAY_CONSTANT * dx;
+          const wakeRadius = rotorRadius + k * dx;
           const downwindRotorRadius = t.type.rotorDiameter / 2;
           const overlapRatio = getOverlapRatio(wakeRadius, downwindRotorRadius, dy);
 
@@ -178,7 +174,20 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
         }
 
         const totalDeficit = Math.min(0.95, Math.max(0, Math.sqrt(totalDeficitSquared)));
-        const effectiveWind = windSpeedMs * (1 - totalDeficit);
+
+        // Individuelle Windgeschwindigkeit für die Turbine
+        const z0 = t.groundAreaID
+          ? groundAreas.find((a) => a.properties.id === t.groundAreaID)?.properties.z0 ?? 0.03
+          : 0.03;
+
+        const windAtHubHeight = GetWindProfileLogarithmic(
+          baseWindSpeedMs,
+          t.type.hubHeight,
+          windrose.elevation,
+          z0
+        );
+
+        const effectiveWind = windAtHubHeight * (1 - totalDeficit);
 
         const power =
           effectiveWind < t.type.cutIn || effectiveWind > t.type.cutOut
@@ -191,8 +200,7 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
         };
       });
 
-
-      // Energie auf originale Turbinen-ID zurückschreiben
+      // Power rückspeichern
       wakeAdjusted.forEach((t) => {
         const index = updatedTurbines.findIndex((orig) => orig.id === t.id);
         if (index >= 0) {
@@ -202,7 +210,7 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
     });
   });
 
-  // Calm-Faktor anwenden und Energie summieren
+  // Calm frequency anwenden
   updatedTurbines.forEach((t) => {
     if (t.available === false) {
       t.powerWithWake = 0;
@@ -214,3 +222,4 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
 
   setTurbines(updatedTurbines);
 };
+

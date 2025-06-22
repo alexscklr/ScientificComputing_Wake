@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import '../styles/WindRoseComp.css';
 import { WindroseData, SpeedUnits, NullWindrose } from '../../types/WindRose';
 import { parseCsvToWindrose, convertToWindrose } from '../../utils/UploadWindroseCSV';
-import { convertSpeedUnits } from '../../utils/CalculateWithoutWake';
+import { convertSpeedUnits } from '../../utils/CalculationFunctions';
 import ReactECharts from 'echarts-for-react';
 
 interface WindRoseCompProps {

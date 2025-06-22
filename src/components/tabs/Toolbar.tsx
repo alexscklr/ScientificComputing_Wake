@@ -1,16 +1,29 @@
 import React from 'react';
 import { Turbine } from '../../types/Turbine';
+import { AreaFeature } from '../../types/GroundArea' // 👈 ggf. anpassen je nach Pfad
 import '../styles/Toolbar.css';
 
 type Props = {
   turbines: Turbine[];
   setTurbines: (t: Turbine[]) => void;
+  groundAreas: AreaFeature[];
+  setGroundAreas: (areas: AreaFeature[]) => void;
 };
 
-const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
+const Toolbar: React.FC<Props> = ({
+  turbines,
+  setTurbines,
+  groundAreas,
+  setGroundAreas,
+}) => {
 
-  const exportTurbines = () => {
-    const dataStr = JSON.stringify(turbines, null, 2);
+  const exportData = () => {
+    const exportObject = {
+      turbines,
+      groundAreas,
+    };
+
+    const dataStr = JSON.stringify(exportObject, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
@@ -22,7 +35,7 @@ const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
     document.body.removeChild(link);
   };
 
-  const importTurbines = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -30,32 +43,34 @@ const Toolbar: React.FC<Props> = ({ turbines, setTurbines }) => {
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target?.result as string);
-        if (Array.isArray(json)) {
-          setTurbines(json);
-        } else {
-          alert('⚠️ Ungültiges Format');
+
+        if (!json || typeof json !== 'object') {
+          alert('⚠️ Ungültiges Format: Kein Objekt gefunden');
+          return;
         }
-      } catch {
+
+        const turbinesData = Array.isArray(json.turbines) ? json.turbines : [];
+        const areasData = Array.isArray(json.groundAreas) ? json.groundAreas : [];
+
+        setTurbines(turbinesData);
+        setGroundAreas(areasData);
+
+      } catch (err) {
         alert('⚠️ Fehler beim Laden der Datei');
       }
     };
     reader.readAsText(file);
   };
 
-
-
-
   return (
     <div className="toolbar-section">
-      <h3>🌪️ Turbinen</h3>
-      <button onClick={exportTurbines}>📤 Exportieren</button>
+      <h3>🌪️ Turbinen & Flächen</h3>
+      <button onClick={exportData}>📤 Exportieren</button>
       <label>
         📥 Importieren:
-        <input type="file" accept="application/json" onChange={importTurbines} />
+        <input type="file" accept="application/json" onChange={importData} />
       </label>
     </div>
-
-
   );
 };
 

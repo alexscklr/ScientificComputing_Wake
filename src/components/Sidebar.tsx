@@ -10,10 +10,15 @@ import CalculatePower from './tabs/CalculatePower';
 import { WindroseData } from '../types/WindRose';
 import { Point } from 'leaflet';
 import TurbineTypesList from './tabs/TurbineTypesList';
+import { AreaFeature } from '../types/GroundArea';
+import GroundAreas from './tabs/GroundAreas';
 
 type SidebarProps = {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
+  groundAreas: AreaFeature[];
+  setGroundAreas: React.Dispatch<React.SetStateAction<AreaFeature[]>>;
+  activeGroundAreas: AreaFeature[];
   mapCenter: Point;
   windroseData: WindroseData;
   setWindroseData: (wr: WindroseData) => void;
@@ -23,7 +28,7 @@ type SidebarProps = {
   onDelete: (id: string) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel, onDelete }) => {
+const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, setGroundAreas, activeGroundAreas, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel, onDelete }) => {
   const { mode, setMode } = useMode();
   const [showBtns, setShowBtns] = useState<boolean>(false);
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
@@ -94,6 +99,12 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
           Neue Turbine
         </button>)}
         {(<button
+          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.GroundAreas) ? 'shown active' : ''}`}
+          onClick={() => setMode(Modes.GroundAreas)}
+        >
+          Ground Areas
+        </button>)}
+        {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Windrose ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Windrose)}
         >
@@ -109,7 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
       <hr style={{ margin: '0 0 15px 0', width: '100%' }} />
       <div className='tab-container'>
         {mode === Modes.Toolbar && (
-          <Toolbar turbines={turbines} setTurbines={setTurbines} />
+          <Toolbar turbines={turbines} setTurbines={setTurbines} groundAreas={groundAreas} setGroundAreas={setGroundAreas} />
         )}
         {mode === Modes.TurbineTypes && (
           <TurbineTypesList />
@@ -121,6 +132,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
             long={activeTurbine[0]?.long || mapCenter.y}
             name={`Wind Turbine ${turbines.length + 1}`}
             type={turbinesPresets.find(t => t.name === 'DefaultNull')!}
+            groundAreaID={""}
             available={true}
             onSave={(turbine: Turbine) => handleSave(turbine)} // Sichere Übergabe der spezifischen Turbine
             onCancel={handleCancel}
@@ -136,12 +148,28 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
               long={at.long}
               name={at.name}
               type={at.type}
+              groundAreaID={at.groundAreaID!}
               available={at.available}
               onSave={(turbine: Turbine) => handleSave(turbine)}  // Sichere Übergabe der spezifischen Turbine
               onCancel={handleCancel}
               onDelete={handleDelete}
             />
           ))
+        )}
+        {(mode === Modes.GroundAreas) && (
+          <GroundAreas
+            groundAreas={groundAreas}
+            activeGroundAreas={activeGroundAreas}
+            onUpdate={(updated) => {
+              const updatedList = groundAreas.map((g) =>
+                g.properties.id === updated.properties.id ? updated : g
+              );
+              setGroundAreas(updatedList);
+            }}
+            onDelete={(id) => {
+              setGroundAreas(groundAreas.filter((g) => g.properties.id !== id));
+            }}
+          />
         )}
         {mode === Modes.Windrose && (
           <WindroseComponent
@@ -155,6 +183,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, mapCenter, win
             setTurbines={setTurbines}
             windrose={windroseData}
             setWindrose={setWindroseData}
+            groundAreas={groundAreas}
           />
         )}
       </div>

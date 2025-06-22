@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import WindMap from './components/WindMap';
 import { Turbine, TurbineType } from './types/Turbine';
+import { AreaFeature } from './types/GroundArea';
 import Sidebar from './components/Sidebar';
 import turbinesPresets from './assets/turbineTypes.json';
 import { Modes, useMode } from './context/ModeContext';
 import { WindroseData, NullWindrose } from './types/WindRose';
 import { Point } from 'leaflet';
 import { applyShiftVector, calculateShiftVector } from './utils/geoUtils';
+import { assignGroundAreaDataToTurbines } from './utils/GroundAreaToTurbines';
 
 function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
+  const [groundAreas, setGroundAreas] = useState<AreaFeature[]>([]);
   const [windroseData, setWindroseData] = useState<WindroseData>(NullWindrose);
   const [mapCenter, setMapCenter] = useState<Point>(new Point(51.6369, 8.234));
-  const [activeTurbines, setActiveTurbines] = useState<Turbine[]>([]); // Halte die aktive Turbine
+  const [activeTurbines, setActiveTurbines] = useState<Turbine[]>([]);
+  const [activeGroundAreas, setActiveGroundAreas] = useState<AreaFeature[]>([]);
   const { mode, setMode } = useMode(); // Aktuellen Modus der Sidebar
 
   const handleMapClick = (lat: number, long: number) => {
@@ -28,7 +32,8 @@ function App() {
 
     // Setze activeTurbine mit der neuen Turbine
     setActiveTurbines([newTurbine]);
-    setMode(Modes.New); // Setze den Modus auf "New"
+    setActiveGroundAreas([]);
+    setMode(Modes.New);
   };
 
 
@@ -83,9 +88,6 @@ function App() {
     setActiveTurbines(prevActives => prevActives.filter(t => t.id !== id));
   };
 
-
-
-
   const dragTurbine = (id: string, newLat: number, newLng: number, shiftPressed: boolean) => {
     const turbine = turbines.find(t => t.id === id);
     if (!turbine) return;
@@ -124,9 +126,30 @@ function App() {
 
       return updatedTurbines;
     });
-
-    setMode(Modes.Edit);
   };
+
+  const saveNewGroundArea = (area: AreaFeature) => {
+    setGroundAreas((prev) => [...prev, area]);
+    setActiveGroundAreas([area]);
+    setMode(Modes.GroundAreas);
+  }
+
+  const clickGroundArea = (area: AreaFeature) => {
+    setActiveGroundAreas([area]);
+    setMode(Modes.GroundAreas);
+  }
+
+  useEffect(() => {
+    const updated = assignGroundAreaDataToTurbines(turbines, groundAreas);
+
+    const hasChanges = turbines.some((t, i) =>
+      t.groundAreaID !== updated[i].groundAreaID
+    );
+
+    if (hasChanges) {
+      setTurbines(updated);
+    }
+  }, [turbines, groundAreas]);
 
 
   return (
@@ -134,17 +157,23 @@ function App() {
       {/* Linke Seite: Karte */}
       <WindMap
         turbines={turbines}
-        setMapCenter={setMapCenter}
+        groundAreas={groundAreas}
         activeTurbines={activeTurbines}
+        setMapCenter={setMapCenter}
         onAddTurbine={handleMapClick}
         onEditTurbine={editTurbine}
         onDragTurbine={dragTurbine}
+        onAddGroundArea={saveNewGroundArea}
+        onGroundAreaClick={clickGroundArea}
       />
 
       {/* Rechte Seite: Sidebar */}
       <Sidebar
         turbines={turbines}
         setTurbines={setTurbines}
+        groundAreas={groundAreas}
+        setGroundAreas={setGroundAreas}
+        activeGroundAreas={activeGroundAreas}
         mapCenter={mapCenter}
         windroseData={windroseData}
         setWindroseData={setWindroseData}
