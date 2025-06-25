@@ -72,12 +72,38 @@ export interface WindroseData {
   elevation: number;
 }
 
-export const NullWindrose : WindroseData = {
+export interface Windrose {
+  name: string;
+  speedUnit: SpeedUnits;
+  calmFrequency: number;
+  speedBins: [number, number][];
+  data: WindroseEntry[];
+}
+
+export interface Mast {
+  id: string;
+  name: string;
+  lat: number;
+  long: number;
+  windrose: Windrose;
+  measureHeight: number;
+  available: boolean;
+}
+
+export const NullWindrose: WindroseData = {
   id: 0,
   name: "nullWindrose",
   speedUnit: SpeedUnits.knt,
   calmFrequency: 0,
-  speedBins: [[0,0]],
-  data: [{directionRange: [0,360], frequencies: [0]}],
+  speedBins: [[0, 0]],
+  data: [{ directionRange: [0, 360], frequencies: [0] }],
   elevation: 0
+}
+
+export const NullWindrose2: Windrose = {
+  name: "nullWindrose",
+  speedUnit: SpeedUnits.knt,
+  calmFrequency: 0,
+  speedBins: [[0, 0]],
+  data: [{ directionRange: [0, 360], frequencies: [0] }],
 }

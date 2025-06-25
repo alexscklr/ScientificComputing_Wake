@@ -12,9 +12,6 @@ export function assignGroundAreaDataToTurbines(
     for (const area of groundAreas) {
       const inside = booleanPointInPolygon(turbinePoint, area);
 
-      console.log(`Checking turbine ${turbine.name} at (${turbine.lat}, ${turbine.long})`);
-      console.log(` → in area ${area.properties.name}? ${inside}`);
-
       if (inside) {
 
         return {

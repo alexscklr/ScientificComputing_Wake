@@ -11,56 +11,544 @@
     "cutOut": 25
   },
   {
+    "name": "Enercon E40/600",
+    "ratedPower": 600,
+    "rotorDiameter": 40,
+    "hubHeight": 65,
+    "yawControl": true,
+    "powerCurve": [
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 0
+      },
+      {
+        "windSpeed": 3,
+        "power": 2
+      },
+      {
+        "windSpeed": 4,
+        "power": 15
+      },
+      {
+        "windSpeed": 5,
+        "power": 41
+      },
+      {
+        "windSpeed": 6,
+        "power": 80
+      },
+      {
+        "windSpeed": 7,
+        "power": 136
+      },
+      {
+        "windSpeed": 8,
+        "power": 208
+      },
+      {
+        "windSpeed": 9,
+        "power": 295
+      },
+      {
+        "windSpeed": 10,
+        "power": 405
+      },
+      {
+        "windSpeed": 11,
+        "power": 508
+      },
+      {
+        "windSpeed": 12,
+        "power": 571
+      },
+      {
+        "windSpeed": 13,
+        "power": 600
+      },
+      {
+        "windSpeed": 14,
+        "power": 600
+      },
+      {
+        "windSpeed": 25,
+        "power": 600
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
+    ],
+    "thrustCoefficientCurve": [
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.86
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.84
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.8
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.76
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.75
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.74
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.74
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.71
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.70
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.53
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.39
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.3
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.24
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.2
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.14
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.1
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
+    "cutIn": 3,
+    "cutOut": 25
+  },
+  {
+    "name": "Enercon E48/800",
+    "ratedPower": 800,
+    "rotorDiameter": 48,
+    "hubHeight": 60,
+    "yawControl": true,
+    "powerCurve": [
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 0
+      },
+      {
+        "windSpeed": 3,
+        "power": 5
+      },
+      {
+        "windSpeed": 4,
+        "power": 25
+      },
+      {
+        "windSpeed": 5,
+        "power": 60
+      },
+      {
+        "windSpeed": 6,
+        "power": 110
+      },
+      {
+        "windSpeed": 7,
+        "power": 180
+      },
+      {
+        "windSpeed": 8,
+        "power": 275
+      },
+      {
+        "windSpeed": 9,
+        "power": 400
+      },
+      {
+        "windSpeed": 10,
+        "power": 555
+      },
+      {
+        "windSpeed": 11,
+        "power": 671
+      },
+      {
+        "windSpeed": 12,
+        "power": 750
+      },
+      {
+        "windSpeed": 13,
+        "power": 790
+      },
+      {
+        "windSpeed": 14,
+        "power": 810
+      },
+      {
+        "windSpeed": 25,
+        "power": 810
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
+    ],
+    "thrustCoefficientCurve": [
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.875
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.894
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.886
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.887
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.886
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.887
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.885
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.890
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.885
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.599
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.432
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.334
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.266
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.216
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.179
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.151
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.130
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.113
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.099
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.088
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.079
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.071
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.064
+      }
+    ],
+    "cutIn": 2.5,
+    "cutOut": 25
+  },
+  {
     "name": "Enercon E82/2000",
     "ratedPower": 2000,
     "rotorDiameter": 82,
     "hubHeight": 138,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 3 },
-      { "windSpeed": 3, "power": 25 },
-      { "windSpeed": 4, "power": 82 },
-      { "windSpeed": 5, "power": 174 },
-      { "windSpeed": 6, "power": 321 },
-      { "windSpeed": 7, "power": 532 },
-      { "windSpeed": 8, "power": 815 },
-      { "windSpeed": 9, "power": 1180 },
-      { "windSpeed": 10, "power": 1612 },
-      { "windSpeed": 11, "power": 1890 },
-      { "windSpeed": 12, "power": 2000 },
-      { "windSpeed": 13, "power": 2050 },
-      { "windSpeed": 14, "power": 2050 },
-      { "windSpeed": 25, "power": 2050 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 3
+      },
+      {
+        "windSpeed": 3,
+        "power": 25
+      },
+      {
+        "windSpeed": 4,
+        "power": 82
+      },
+      {
+        "windSpeed": 5,
+        "power": 174
+      },
+      {
+        "windSpeed": 6,
+        "power": 321
+      },
+      {
+        "windSpeed": 7,
+        "power": 532
+      },
+      {
+        "windSpeed": 8,
+        "power": 815
+      },
+      {
+        "windSpeed": 9,
+        "power": 1180
+      },
+      {
+        "windSpeed": 10,
+        "power": 1612
+      },
+      {
+        "windSpeed": 11,
+        "power": 1890
+      },
+      {
+        "windSpeed": 12,
+        "power": 2000
+      },
+      {
+        "windSpeed": 13,
+        "power": 2050
+      },
+      {
+        "windSpeed": 14,
+        "power": 2050
+      },
+      {
+        "windSpeed": 25,
+        "power": 2050
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-      { "windSpeed": 0,  "thrust": 0.0 },
-      { "windSpeed": 1,  "thrust": 0.0 },
-      { "windSpeed": 2,  "thrust": 0.92 },
-      { "windSpeed": 3,  "thrust": 0.92 },
-      { "windSpeed": 4,  "thrust": 0.90 },
-      { "windSpeed": 5,  "thrust": 0.88 },
-      { "windSpeed": 6,  "thrust": 0.87 },
-      { "windSpeed": 7,  "thrust": 0.86 },
-      { "windSpeed": 8,  "thrust": 0.85 },
-      { "windSpeed": 9,  "thrust": 0.83 },
-      { "windSpeed": 10, "thrust": 0.80 },
-      { "windSpeed": 11, "thrust": 0.65 },
-      { "windSpeed": 12, "thrust": 0.50 },
-      { "windSpeed": 13, "thrust": 0.38 },
-      { "windSpeed": 14, "thrust": 0.30 },
-      { "windSpeed": 15, "thrust": 0.24 },
-      { "windSpeed": 16, "thrust": 0.20 },
-      { "windSpeed": 17, "thrust": 0.17 },
-      { "windSpeed": 18, "thrust": 0.15 },
-      { "windSpeed": 19, "thrust": 0.13 },
-      { "windSpeed": 20, "thrust": 0.11 },
-      { "windSpeed": 21, "thrust": 0.10 },
-      { "windSpeed": 22, "thrust": 0.09 },
-      { "windSpeed": 23, "thrust": 0.08 },
-      { "windSpeed": 24, "thrust": 0.07 },
-      { "windSpeed": 25, "thrust": 0.07 }
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.90
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.86
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.85
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.83
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.80
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.65
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.50
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.38
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.30
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.24
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.20
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
     ],
     "cutIn": 2,
     "cutOut": 25
@@ -72,52 +560,177 @@
     "hubHeight": 138,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 3 },
-      { "windSpeed": 3, "power": 25 },
-      { "windSpeed": 4, "power": 82 },
-      { "windSpeed": 5, "power": 174 },
-      { "windSpeed": 6, "power": 321 },
-      { "windSpeed": 7, "power": 532 },
-      { "windSpeed": 8, "power": 815 },
-      { "windSpeed": 9, "power": 1180 },
-      { "windSpeed": 10, "power": 1580 },
-      { "windSpeed": 11, "power": 1890 },
-      { "windSpeed": 12, "power": 2100 },
-      { "windSpeed": 13, "power": 2240 },
-      { "windSpeed": 14, "power": 2300 },
-      { "windSpeed": 25, "power": 2300 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 3
+      },
+      {
+        "windSpeed": 3,
+        "power": 25
+      },
+      {
+        "windSpeed": 4,
+        "power": 82
+      },
+      {
+        "windSpeed": 5,
+        "power": 174
+      },
+      {
+        "windSpeed": 6,
+        "power": 321
+      },
+      {
+        "windSpeed": 7,
+        "power": 532
+      },
+      {
+        "windSpeed": 8,
+        "power": 815
+      },
+      {
+        "windSpeed": 9,
+        "power": 1180
+      },
+      {
+        "windSpeed": 10,
+        "power": 1580
+      },
+      {
+        "windSpeed": 11,
+        "power": 1890
+      },
+      {
+        "windSpeed": 12,
+        "power": 2100
+      },
+      {
+        "windSpeed": 13,
+        "power": 2240
+      },
+      {
+        "windSpeed": 14,
+        "power": 2300
+      },
+      {
+        "windSpeed": 25,
+        "power": 2300
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.00 },
-  { "windSpeed": 1,  "thrust": 0.00 },
-  { "windSpeed": 2,  "thrust": 0.93 },
-  { "windSpeed": 3,  "thrust": 0.93 },
-  { "windSpeed": 4,  "thrust": 0.91 },
-  { "windSpeed": 5,  "thrust": 0.89 },
-  { "windSpeed": 6,  "thrust": 0.88 },
-  { "windSpeed": 7,  "thrust": 0.87 },
-  { "windSpeed": 8,  "thrust": 0.85 },
-  { "windSpeed": 9,  "thrust": 0.83 },
-  { "windSpeed": 10, "thrust": 0.80 },
-  { "windSpeed": 11, "thrust": 0.65 },
-  { "windSpeed": 12, "thrust": 0.50 },
-  { "windSpeed": 13, "thrust": 0.38 },
-  { "windSpeed": 14, "thrust": 0.30 },
-  { "windSpeed": 15, "thrust": 0.25 },
-  { "windSpeed": 16, "thrust": 0.20 },
-  { "windSpeed": 17, "thrust": 0.17 },
-  { "windSpeed": 18, "thrust": 0.15 },
-  { "windSpeed": 19, "thrust": 0.13 },
-  { "windSpeed": 20, "thrust": 0.11 },
-  { "windSpeed": 21, "thrust": 0.10 },
-  { "windSpeed": 22, "thrust": 0.09 },
-  { "windSpeed": 23, "thrust": 0.08 },
-  { "windSpeed": 24, "thrust": 0.07 },
-  { "windSpeed": 25, "thrust": 0.07 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.93
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.93
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.89
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.85
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.83
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.80
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.65
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.50
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.38
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.30
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.25
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.20
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
     "cutIn": 2,
     "cutOut": 25
   },
@@ -128,50 +741,176 @@
     "hubHeight": 138,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 3 },
-      { "windSpeed": 3, "power": 49 },
-      { "windSpeed": 4, "power": 155 },
-      { "windSpeed": 5, "power": 339 },
-      { "windSpeed": 6, "power": 628 },
-      { "windSpeed": 7, "power": 1035 },
-      { "windSpeed": 8, "power": 1549 },
-      { "windSpeed": 9, "power": 2090 },
-      { "windSpeed": 10, "power": 2580 },
-      { "windSpeed": 11, "power": 2900 },
-      { "windSpeed": 12, "power": 3000 },
-      { "windSpeed": 13, "power": 3000 },
-      { "windSpeed": 14, "power": 3000 },
-      { "windSpeed": 25, "power": 3000 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 3
+      },
+      {
+        "windSpeed": 3,
+        "power": 49
+      },
+      {
+        "windSpeed": 4,
+        "power": 155
+      },
+      {
+        "windSpeed": 5,
+        "power": 339
+      },
+      {
+        "windSpeed": 6,
+        "power": 628
+      },
+      {
+        "windSpeed": 7,
+        "power": 1035
+      },
+      {
+        "windSpeed": 8,
+        "power": 1549
+      },
+      {
+        "windSpeed": 9,
+        "power": 2090
+      },
+      {
+        "windSpeed": 10,
+        "power": 2580
+      },
+      {
+        "windSpeed": 11,
+        "power": 2900
+      },
+      {
+        "windSpeed": 12,
+        "power": 3000
+      },
+      {
+        "windSpeed": 13,
+        "power": 3000
+      },
+      {
+        "windSpeed": 14,
+        "power": 3000
+      },
+      {
+        "windSpeed": 25,
+        "power": 3000
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-      { "windSpeed": 0, "thrust": 0 },
-      { "windSpeed": 1, "thrust": 0 },
-      { "windSpeed": 2, "thrust": 1 },
-      { "windSpeed": 3, "thrust": 1 },
-      { "windSpeed": 4, "thrust": 0.94 },
-      { "windSpeed": 5, "thrust": 0.91 },
-      { "windSpeed": 6, "thrust": 0.88 },
-      { "windSpeed": 7, "thrust": 0.88 },
-      { "windSpeed": 8, "thrust": 0.86 },
-      { "windSpeed": 9, "thrust": 0.83 },
-      { "windSpeed": 10, "thrust": 0.78 },
-      { "windSpeed": 11, "thrust": 0.51 },
-      { "windSpeed": 12, "thrust": 0.37 },
-      { "windSpeed": 13, "thrust": 0.28 },
-      { "windSpeed": 14, "thrust": 0.22 },
-      { "windSpeed": 15, "thrust": 0.18 },
-      { "windSpeed": 16, "thrust": 0.15 },
-      { "windSpeed": 17, "thrust": 0.12 },
-      { "windSpeed": 18, "thrust": 0.11 },
-      { "windSpeed": 19, "thrust": 0.09 },
-      { "windSpeed": 20, "thrust": 0.08 },
-      { "windSpeed": 21, "thrust": 0.07 },
-      { "windSpeed": 22, "thrust": 0.06 },
-      { "windSpeed": 23, "thrust": 0.06 },
-      { "windSpeed": 24, "thrust": 0.05 },
-      { "windSpeed": 25, "thrust": 0.05 }
+      {
+        "windSpeed": 0,
+        "thrust": 0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 1
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 1
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.86
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.83
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.78
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.51
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.37
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.28
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.22
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.18
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.06
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.06
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.05
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.05
+      }
     ],
     "cutIn": 2,
     "cutOut": 25
@@ -183,53 +922,181 @@
     "ratedPower": 1500,
     "yawControl": false,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 0 },
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 48 },
-      { "windSpeed": 5, "power": 130 },
-      { "windSpeed": 6, "power": 257 },
-      { "windSpeed": 7, "power": 418 },
-      { "windSpeed": 8, "power": 652 },
-      { "windSpeed": 9, "power": 938 },
-      { "windSpeed": 10, "power": 1203 },
-      { "windSpeed": 11, "power": 1351 },
-      { "windSpeed": 12, "power": 1437 },
-      { "windSpeed": 13, "power": 1480 },
-      { "windSpeed": 14, "power": 1496 },
-      { "windSpeed": 15, "power": 1500 },
-      { "windSpeed": 25, "power": 1500 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 0
+      },
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 48
+      },
+      {
+        "windSpeed": 5,
+        "power": 130
+      },
+      {
+        "windSpeed": 6,
+        "power": 257
+      },
+      {
+        "windSpeed": 7,
+        "power": 418
+      },
+      {
+        "windSpeed": 8,
+        "power": 652
+      },
+      {
+        "windSpeed": 9,
+        "power": 938
+      },
+      {
+        "windSpeed": 10,
+        "power": 1203
+      },
+      {
+        "windSpeed": 11,
+        "power": 1351
+      },
+      {
+        "windSpeed": 12,
+        "power": 1437
+      },
+      {
+        "windSpeed": 13,
+        "power": 1480
+      },
+      {
+        "windSpeed": 14,
+        "power": 1496
+      },
+      {
+        "windSpeed": 15,
+        "power": 1500
+      },
+      {
+        "windSpeed": 25,
+        "power": 1500
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.0 },
-  { "windSpeed": 1,  "thrust": 0.0 },
-  { "windSpeed": 2,  "thrust": 0.91 },
-  { "windSpeed": 3,  "thrust": 0.91 },
-  { "windSpeed": 4,  "thrust": 0.90 },
-  { "windSpeed": 5,  "thrust": 0.89 },
-  { "windSpeed": 6,  "thrust": 0.88 },
-  { "windSpeed": 7,  "thrust": 0.87 },
-  { "windSpeed": 8,  "thrust": 0.85 },
-  { "windSpeed": 9,  "thrust": 0.83 },
-  { "windSpeed": 10, "thrust": 0.78 },
-  { "windSpeed": 11, "thrust": 0.60 },
-  { "windSpeed": 12, "thrust": 0.45 },
-  { "windSpeed": 13, "thrust": 0.33 },
-  { "windSpeed": 14, "thrust": 0.26 },
-  { "windSpeed": 15, "thrust": 0.22 },
-  { "windSpeed": 16, "thrust": 0.18 },
-  { "windSpeed": 17, "thrust": 0.16 },
-  { "windSpeed": 18, "thrust": 0.14 },
-  { "windSpeed": 19, "thrust": 0.12 },
-  { "windSpeed": 20, "thrust": 0.10 },
-  { "windSpeed": 21, "thrust": 0.09 },
-  { "windSpeed": 22, "thrust": 0.08 },
-  { "windSpeed": 23, "thrust": 0.07 },
-  { "windSpeed": 24, "thrust": 0.06 },
-  { "windSpeed": 25, "thrust": 0.06 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.90
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.89
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.85
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.83
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.78
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.60
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.45
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.33
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.26
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.22
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.18
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.16
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.14
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.06
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.06
+      }
+    ],
     "cutIn": 3.5,
     "cutOut": 25
   },
@@ -240,51 +1107,173 @@
     "hubHeight": 153,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 130 },
-      { "windSpeed": 3, "power": 401 },
-      { "windSpeed": 4, "power": 749 },
-      { "windSpeed": 5, "power": 1097 },
-      { "windSpeed": 6, "power": 1467 },
-      { "windSpeed": 7, "power": 1857 },
-      { "windSpeed": 8, "power": 2042 },
-      { "windSpeed": 9, "power": 2100 },
-      { "windSpeed": 20, "power": 2100 },
-      { "windSpeed": 21, "power": 2049 },
-      { "windSpeed": 22, "power": 1914 },
-      { "windSpeed": 23, "power": 1751 },
-      { "windSpeed": 24, "power": 1610 },
-      { "windSpeed": 25, "power": 1480 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 130
+      },
+      {
+        "windSpeed": 3,
+        "power": 401
+      },
+      {
+        "windSpeed": 4,
+        "power": 749
+      },
+      {
+        "windSpeed": 5,
+        "power": 1097
+      },
+      {
+        "windSpeed": 6,
+        "power": 1467
+      },
+      {
+        "windSpeed": 7,
+        "power": 1857
+      },
+      {
+        "windSpeed": 8,
+        "power": 2042
+      },
+      {
+        "windSpeed": 9,
+        "power": 2100
+      },
+      {
+        "windSpeed": 20,
+        "power": 2100
+      },
+      {
+        "windSpeed": 21,
+        "power": 2049
+      },
+      {
+        "windSpeed": 22,
+        "power": 1914
+      },
+      {
+        "windSpeed": 23,
+        "power": 1751
+      },
+      {
+        "windSpeed": 24,
+        "power": 1610
+      },
+      {
+        "windSpeed": 25,
+        "power": 1480
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.0 },
-  { "windSpeed": 1,  "thrust": 0.0 },
-  { "windSpeed": 2,  "thrust": 0.94 },
-  { "windSpeed": 3,  "thrust": 0.94 },
-  { "windSpeed": 4,  "thrust": 0.93 },
-  { "windSpeed": 5,  "thrust": 0.92 },
-  { "windSpeed": 6,  "thrust": 0.91 },
-  { "windSpeed": 7,  "thrust": 0.89 },
-  { "windSpeed": 8,  "thrust": 0.87 },
-  { "windSpeed": 9,  "thrust": 0.85 },
-  { "windSpeed": 10, "thrust": 0.80 },
-  { "windSpeed": 11, "thrust": 0.65 },
-  { "windSpeed": 12, "thrust": 0.50 },
-  { "windSpeed": 13, "thrust": 0.38 },
-  { "windSpeed": 14, "thrust": 0.30 },
-  { "windSpeed": 15, "thrust": 0.25 },
-  { "windSpeed": 16, "thrust": 0.20 },
-  { "windSpeed": 17, "thrust": 0.18 },
-  { "windSpeed": 18, "thrust": 0.15 },
-  { "windSpeed": 19, "thrust": 0.13 },
-  { "windSpeed": 20, "thrust": 0.11 },
-  { "windSpeed": 21, "thrust": 0.10 },
-  { "windSpeed": 22, "thrust": 0.09 },
-  { "windSpeed": 23, "thrust": 0.08 },
-  { "windSpeed": 24, "thrust": 0.07 },
-  { "windSpeed": 25, "thrust": 0.07 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.93
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.89
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.85
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.80
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.65
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.50
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.38
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.30
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.25
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.20
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.18
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
     "cutIn": 1.5,
     "cutOut": 25
   },
@@ -295,61 +1284,217 @@
     "hubHeight": 85,
     "yawControl": false,
     "powerCurve": [
-      { "windSpeed": 1, "power": 0 },
-      { "windSpeed": 2, "power": 0 },
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 29 },
-      { "windSpeed": 5, "power": 73 },
-      { "windSpeed": 6, "power": 131 },
-      { "windSpeed": 7, "power": 240 },
-      { "windSpeed": 8, "power": 376 },
-      { "windSpeed": 9, "power": 536 },
-      { "windSpeed": 10, "power": 704 },
-      { "windSpeed": 11, "power": 871 },
-      { "windSpeed": 12, "power": 1016 },
-      { "windSpeed": 13, "power": 1124 },
-      { "windSpeed": 14, "power": 1247 },
-      { "windSpeed": 15, "power": 1301 },
-      { "windSpeed": 16, "power": 1344 },
-      { "windSpeed": 17, "power": 1364 },
-      { "windSpeed": 18, "power": 1322 },
-      { "windSpeed": 19, "power": 1319 },
-      { "windSpeed": 20, "power": 1314 },
-      { "windSpeed": 21, "power": 1312 },
-      { "windSpeed": 22, "power": 1307 },
-      { "windSpeed": 23, "power": 1298.7 },
-      { "windSpeed": 24, "power": 1292 },
-      { "windSpeed": 25, "power": 1292 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 1,
+        "power": 0
+      },
+      {
+        "windSpeed": 2,
+        "power": 0
+      },
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 29
+      },
+      {
+        "windSpeed": 5,
+        "power": 73
+      },
+      {
+        "windSpeed": 6,
+        "power": 131
+      },
+      {
+        "windSpeed": 7,
+        "power": 240
+      },
+      {
+        "windSpeed": 8,
+        "power": 376
+      },
+      {
+        "windSpeed": 9,
+        "power": 536
+      },
+      {
+        "windSpeed": 10,
+        "power": 704
+      },
+      {
+        "windSpeed": 11,
+        "power": 871
+      },
+      {
+        "windSpeed": 12,
+        "power": 1016
+      },
+      {
+        "windSpeed": 13,
+        "power": 1124
+      },
+      {
+        "windSpeed": 14,
+        "power": 1247
+      },
+      {
+        "windSpeed": 15,
+        "power": 1301
+      },
+      {
+        "windSpeed": 16,
+        "power": 1344
+      },
+      {
+        "windSpeed": 17,
+        "power": 1364
+      },
+      {
+        "windSpeed": 18,
+        "power": 1322
+      },
+      {
+        "windSpeed": 19,
+        "power": 1319
+      },
+      {
+        "windSpeed": 20,
+        "power": 1314
+      },
+      {
+        "windSpeed": 21,
+        "power": 1312
+      },
+      {
+        "windSpeed": 22,
+        "power": 1307
+      },
+      {
+        "windSpeed": 23,
+        "power": 1298.7
+      },
+      {
+        "windSpeed": 24,
+        "power": 1292
+      },
+      {
+        "windSpeed": 25,
+        "power": 1292
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.0 },
-  { "windSpeed": 1,  "thrust": 0.0 },
-  { "windSpeed": 2,  "thrust": 0.96 },
-  { "windSpeed": 3,  "thrust": 0.95 },
-  { "windSpeed": 4,  "thrust": 0.94 },
-  { "windSpeed": 5,  "thrust": 0.93 },
-  { "windSpeed": 6,  "thrust": 0.91 },
-  { "windSpeed": 7,  "thrust": 0.89 },
-  { "windSpeed": 8,  "thrust": 0.86 },
-  { "windSpeed": 9,  "thrust": 0.82 },
-  { "windSpeed": 10, "thrust": 0.75 },
-  { "windSpeed": 11, "thrust": 0.58 },
-  { "windSpeed": 12, "thrust": 0.45 },
-  { "windSpeed": 13, "thrust": 0.35 },
-  { "windSpeed": 14, "thrust": 0.28 },
-  { "windSpeed": 15, "thrust": 0.22 },
-  { "windSpeed": 16, "thrust": 0.18 },
-  { "windSpeed": 17, "thrust": 0.15 },
-  { "windSpeed": 18, "thrust": 0.13 },
-  { "windSpeed": 19, "thrust": 0.11 },
-  { "windSpeed": 20, "thrust": 0.10 },
-  { "windSpeed": 21, "thrust": 0.09 },
-  { "windSpeed": 22, "thrust": 0.08 },
-  { "windSpeed": 23, "thrust": 0.07 },
-  { "windSpeed": 24, "thrust": 0.07 },
-  { "windSpeed": 25, "thrust": 0.07 }
-],
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.96
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.95
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.93
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.89
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.86
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.82
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.75
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.58
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.45
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.35
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.28
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.22
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.18
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
     "cutIn": 2.5,
     "cutOut": 25
   },
@@ -360,50 +1505,173 @@
     "hubHeight": 105,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 15 },
-      { "windSpeed": 5, "power": 121 },
-      { "windSpeed": 6, "power": 251 },
-      { "windSpeed": 7, "power": 433 },
-      { "windSpeed": 8, "power": 667 },
-      { "windSpeed": 9, "power": 974 },
-      { "windSpeed": 10, "power": 1319 },
-      { "windSpeed": 11, "power": 1675 },
-      { "windSpeed": 12, "power": 2004 },
-      { "windSpeed": 13, "power": 2281 },
-      { "windSpeed": 14, "power": 2463 },
-      { "windSpeed": 15, "power": 2500 },
-      { "windSpeed": 25, "power": 2500 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 15
+      },
+      {
+        "windSpeed": 5,
+        "power": 121
+      },
+      {
+        "windSpeed": 6,
+        "power": 251
+      },
+      {
+        "windSpeed": 7,
+        "power": 433
+      },
+      {
+        "windSpeed": 8,
+        "power": 667
+      },
+      {
+        "windSpeed": 9,
+        "power": 974
+      },
+      {
+        "windSpeed": 10,
+        "power": 1319
+      },
+      {
+        "windSpeed": 11,
+        "power": 1675
+      },
+      {
+        "windSpeed": 12,
+        "power": 2004
+      },
+      {
+        "windSpeed": 13,
+        "power": 2281
+      },
+      {
+        "windSpeed": 14,
+        "power": 2463
+      },
+      {
+        "windSpeed": 15,
+        "power": 2500
+      },
+      {
+        "windSpeed": 25,
+        "power": 2500
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.00 },
-  { "windSpeed": 1,  "thrust": 0.00 },
-  { "windSpeed": 2,  "thrust": 0.98 },
-  { "windSpeed": 3,  "thrust": 0.96 },
-  { "windSpeed": 4,  "thrust": 0.94 },
-  { "windSpeed": 5,  "thrust": 0.92 },
-  { "windSpeed": 6,  "thrust": 0.90 },
-  { "windSpeed": 7,  "thrust": 0.88 },
-  { "windSpeed": 8,  "thrust": 0.85 },
-  { "windSpeed": 9,  "thrust": 0.81 },
-  { "windSpeed": 10, "thrust": 0.76 },
-  { "windSpeed": 11, "thrust": 0.62 },
-  { "windSpeed": 12, "thrust": 0.50 },
-  { "windSpeed": 13, "thrust": 0.39 },
-  { "windSpeed": 14, "thrust": 0.30 },
-  { "windSpeed": 15, "thrust": 0.24 },
-  { "windSpeed": 16, "thrust": 0.20 },
-  { "windSpeed": 17, "thrust": 0.17 },
-  { "windSpeed": 18, "thrust": 0.15 },
-  { "windSpeed": 19, "thrust": 0.13 },
-  { "windSpeed": 20, "thrust": 0.12 },
-  { "windSpeed": 21, "thrust": 0.11 },
-  { "windSpeed": 22, "thrust": 0.10 },
-  { "windSpeed": 23, "thrust": 0.09 },
-  { "windSpeed": 24, "thrust": 0.08 },
-  { "windSpeed": 25, "thrust": 0.07 }
-],
+      {
+        "windSpeed": 0,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.98
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.96
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.90
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.88
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.85
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.81
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.76
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.62
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.50
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.39
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.30
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.24
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.20
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
     "cutIn": 4,
     "cutOut": 25
   },
@@ -414,48 +1682,161 @@
     "hubHeight": 74,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 80 },
-      { "windSpeed": 5, "power": 134 },
-      { "windSpeed": 6, "power": 269 },
-      { "windSpeed": 7, "power": 444 },
-      { "windSpeed": 8, "power": 637 },
-      { "windSpeed": 9, "power": 850 },
-      { "windSpeed": 10, "power": 1030 },
-      { "windSpeed": 11, "power": 1165 },
-      { "windSpeed": 12, "power": 1240 },
-      { "windSpeed": 13, "power": 1250 },
-      { "windSpeed": 22, "power": 0 }
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 80
+      },
+      {
+        "windSpeed": 5,
+        "power": 134
+      },
+      {
+        "windSpeed": 6,
+        "power": 269
+      },
+      {
+        "windSpeed": 7,
+        "power": 444
+      },
+      {
+        "windSpeed": 8,
+        "power": 637
+      },
+      {
+        "windSpeed": 9,
+        "power": 850
+      },
+      {
+        "windSpeed": 10,
+        "power": 1030
+      },
+      {
+        "windSpeed": 11,
+        "power": 1165
+      },
+      {
+        "windSpeed": 12,
+        "power": 1240
+      },
+      {
+        "windSpeed": 13,
+        "power": 1250
+      },
+      {
+        "windSpeed": 22,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.0 },
-  { "windSpeed": 1,  "thrust": 0.0 },
-  { "windSpeed": 2,  "thrust": 0.96 },
-  { "windSpeed": 3,  "thrust": 0.95 },
-  { "windSpeed": 4,  "thrust": 0.94 },
-  { "windSpeed": 5,  "thrust": 0.92 },
-  { "windSpeed": 6,  "thrust": 0.90 },
-  { "windSpeed": 7,  "thrust": 0.87 },
-  { "windSpeed": 8,  "thrust": 0.84 },
-  { "windSpeed": 9,  "thrust": 0.80 },
-  { "windSpeed": 10, "thrust": 0.74 },
-  { "windSpeed": 11, "thrust": 0.58 },
-  { "windSpeed": 12, "thrust": 0.45 },
-  { "windSpeed": 13, "thrust": 0.34 },
-  { "windSpeed": 14, "thrust": 0.26 },
-  { "windSpeed": 15, "thrust": 0.21 },
-  { "windSpeed": 16, "thrust": 0.17 },
-  { "windSpeed": 17, "thrust": 0.14 },
-  { "windSpeed": 18, "thrust": 0.12 },
-  { "windSpeed": 19, "thrust": 0.10 },
-  { "windSpeed": 20, "thrust": 0.09 },
-  { "windSpeed": 21, "thrust": 0.08 },
-  { "windSpeed": 22, "thrust": 0.07 },
-  { "windSpeed": 23, "thrust": 0.07 },
-  { "windSpeed": 24, "thrust": 0.06 },
-  { "windSpeed": 25, "thrust": 0.06 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.0
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.96
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.95
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.90
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.84
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.80
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.74
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.58
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.45
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.34
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.26
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.21
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.14
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.06
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.06
+      }
+    ],
     "cutIn": 4,
     "cutOut": 21
   },
@@ -466,30 +1847,96 @@
     "hubHeight": 105,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 77 },
-      { "windSpeed": 5, "power": 190 },
-      { "windSpeed": 6, "power": 353 },
-      { "windSpeed": 7, "power": 581 },
-      { "windSpeed": 8, "power": 886 },
-      { "windSpeed": 9, "power": 1272 },
-      { "windSpeed": 10, "power": 1696 },
-      { "windSpeed": 11, "power": 2106 },
-      { "windSpeed": 12, "power": 2489 },
-      { "windSpeed": 13, "power": 2797 },
-      { "windSpeed": 14, "power": 2951 },
-      { "windSpeed": 15, "power": 2993 },
-      { "windSpeed": 16, "power": 2999 },
-      { "windSpeed": 17, "power": 3000 },
-      { "windSpeed": 25, "power": 3000 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 77
+      },
+      {
+        "windSpeed": 5,
+        "power": 190
+      },
+      {
+        "windSpeed": 6,
+        "power": 353
+      },
+      {
+        "windSpeed": 7,
+        "power": 581
+      },
+      {
+        "windSpeed": 8,
+        "power": 886
+      },
+      {
+        "windSpeed": 9,
+        "power": 1272
+      },
+      {
+        "windSpeed": 10,
+        "power": 1696
+      },
+      {
+        "windSpeed": 11,
+        "power": 2106
+      },
+      {
+        "windSpeed": 12,
+        "power": 2489
+      },
+      {
+        "windSpeed": 13,
+        "power": 2797
+      },
+      {
+        "windSpeed": 14,
+        "power": 2951
+      },
+      {
+        "windSpeed": 15,
+        "power": 2993
+      },
+      {
+        "windSpeed": 16,
+        "power": 2999
+      },
+      {
+        "windSpeed": 17,
+        "power": 3000
+      },
+      {
+        "windSpeed": 25,
+        "power": 3000
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-      { "windSpeed": 0, "thrust": 0 },
-      { "windSpeed": 6, "thrust": 0.3 },
-      { "windSpeed": 10, "thrust": 0.4 },
-      { "windSpeed": 15, "thrust": 0.45 },
-      { "windSpeed": 25, "thrust": 0.5 }
+      {
+        "windSpeed": 0,
+        "thrust": 0
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.3
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.4
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.45
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.5
+      }
     ],
     "cutIn": 4,
     "cutOut": 25
@@ -501,51 +1948,173 @@
     "hubHeight": 100,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 3, "power": 0 },
-      { "windSpeed": 4, "power": 66 },
-      { "windSpeed": 5, "power": 192 },
-      { "windSpeed": 6, "power": 343 },
-      { "windSpeed": 7, "power": 519 },
-      { "windSpeed": 8, "power": 711 },
-      { "windSpeed": 9, "power": 959 },
-      { "windSpeed": 10, "power": 1355 },
-      { "windSpeed": 11, "power": 1681 },
-      { "windSpeed": 12, "power": 1861 },
-      { "windSpeed": 13, "power": 1947 },
-      { "windSpeed": 14, "power": 1987 },
-      { "windSpeed": 15, "power": 2000 },
-      { "windSpeed": 25, "power": 2000 },
-      { "windSpeed": 26, "power": 0 }
+      {
+        "windSpeed": 3,
+        "power": 0
+      },
+      {
+        "windSpeed": 4,
+        "power": 66
+      },
+      {
+        "windSpeed": 5,
+        "power": 192
+      },
+      {
+        "windSpeed": 6,
+        "power": 343
+      },
+      {
+        "windSpeed": 7,
+        "power": 519
+      },
+      {
+        "windSpeed": 8,
+        "power": 711
+      },
+      {
+        "windSpeed": 9,
+        "power": 959
+      },
+      {
+        "windSpeed": 10,
+        "power": 1355
+      },
+      {
+        "windSpeed": 11,
+        "power": 1681
+      },
+      {
+        "windSpeed": 12,
+        "power": 1861
+      },
+      {
+        "windSpeed": 13,
+        "power": 1947
+      },
+      {
+        "windSpeed": 14,
+        "power": 1987
+      },
+      {
+        "windSpeed": 15,
+        "power": 2000
+      },
+      {
+        "windSpeed": 25,
+        "power": 2000
+      },
+      {
+        "windSpeed": 26,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.00 },
-  { "windSpeed": 1,  "thrust": 0.00 },
-  { "windSpeed": 2,  "thrust": 0.95 },
-  { "windSpeed": 3,  "thrust": 0.95 },
-  { "windSpeed": 4,  "thrust": 0.94 },
-  { "windSpeed": 5,  "thrust": 0.93 },
-  { "windSpeed": 6,  "thrust": 0.91 },
-  { "windSpeed": 7,  "thrust": 0.89 },
-  { "windSpeed": 8,  "thrust": 0.86 },
-  { "windSpeed": 9,  "thrust": 0.83 },
-  { "windSpeed": 10, "thrust": 0.78 },
-  { "windSpeed": 11, "thrust": 0.66 },
-  { "windSpeed": 12, "thrust": 0.54 },
-  { "windSpeed": 13, "thrust": 0.43 },
-  { "windSpeed": 14, "thrust": 0.33 },
-  { "windSpeed": 15, "thrust": 0.26 },
-  { "windSpeed": 16, "thrust": 0.21 },
-  { "windSpeed": 17, "thrust": 0.17 },
-  { "windSpeed": 18, "thrust": 0.15 },
-  { "windSpeed": 19, "thrust": 0.13 },
-  { "windSpeed": 20, "thrust": 0.12 },
-  { "windSpeed": 21, "thrust": 0.10 },
-  { "windSpeed": 22, "thrust": 0.09 },
-  { "windSpeed": 23, "thrust": 0.08 },
-  { "windSpeed": 24, "thrust": 0.07 },
-  { "windSpeed": 25, "thrust": 0.07 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.95
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.95
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.93
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.91
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.89
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.86
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.83
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.78
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.66
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.54
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.43
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.33
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.26
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.21
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.17
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.15
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.12
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.07
+      }
+    ],
     "cutIn": 4,
     "cutOut": 25
   },
@@ -556,48 +2125,161 @@
     "hubHeight": 115,
     "yawControl": true,
     "powerCurve": [
-      { "windSpeed": 2, "power": 0 },
-      { "windSpeed": 3, "power": 27 },
-      { "windSpeed": 4, "power": 92 },
-      { "windSpeed": 5, "power": 225 },
-      { "windSpeed": 6, "power": 524 },
-      { "windSpeed": 7, "power": 919 },
-      { "windSpeed": 8, "power": 1389 },
-      { "windSpeed": 9, "power": 1947 },
-      { "windSpeed": 10, "power": 2243 },
-      { "windSpeed": 11, "power": 2300 },
-      { "windSpeed": 20, "power": 2300 },
-      { "windSpeed": 21, "power": 0 }
+      {
+        "windSpeed": 2,
+        "power": 0
+      },
+      {
+        "windSpeed": 3,
+        "power": 27
+      },
+      {
+        "windSpeed": 4,
+        "power": 92
+      },
+      {
+        "windSpeed": 5,
+        "power": 225
+      },
+      {
+        "windSpeed": 6,
+        "power": 524
+      },
+      {
+        "windSpeed": 7,
+        "power": 919
+      },
+      {
+        "windSpeed": 8,
+        "power": 1389
+      },
+      {
+        "windSpeed": 9,
+        "power": 1947
+      },
+      {
+        "windSpeed": 10,
+        "power": 2243
+      },
+      {
+        "windSpeed": 11,
+        "power": 2300
+      },
+      {
+        "windSpeed": 20,
+        "power": 2300
+      },
+      {
+        "windSpeed": 21,
+        "power": 0
+      }
     ],
     "thrustCoefficientCurve": [
-  { "windSpeed": 0,  "thrust": 0.00 },
-  { "windSpeed": 1,  "thrust": 0.00 },
-  { "windSpeed": 2,  "thrust": 0.96 },
-  { "windSpeed": 3,  "thrust": 0.96 },
-  { "windSpeed": 4,  "thrust": 0.95 },
-  { "windSpeed": 5,  "thrust": 0.94 },
-  { "windSpeed": 6,  "thrust": 0.92 },
-  { "windSpeed": 7,  "thrust": 0.90 },
-  { "windSpeed": 8,  "thrust": 0.87 },
-  { "windSpeed": 9,  "thrust": 0.84 },
-  { "windSpeed": 10, "thrust": 0.78 },
-  { "windSpeed": 11, "thrust": 0.65 },
-  { "windSpeed": 12, "thrust": 0.52 },
-  { "windSpeed": 13, "thrust": 0.40 },
-  { "windSpeed": 14, "thrust": 0.30 },
-  { "windSpeed": 15, "thrust": 0.24 },
-  { "windSpeed": 16, "thrust": 0.19 },
-  { "windSpeed": 17, "thrust": 0.16 },
-  { "windSpeed": 18, "thrust": 0.13 },
-  { "windSpeed": 19, "thrust": 0.11 },
-  { "windSpeed": 20, "thrust": 0.10 },
-  { "windSpeed": 21, "thrust": 0.09 },
-  { "windSpeed": 22, "thrust": 0.08 },
-  { "windSpeed": 23, "thrust": 0.07 },
-  { "windSpeed": 24, "thrust": 0.06 },
-  { "windSpeed": 25, "thrust": 0.06 }
-]
-,
+      {
+        "windSpeed": 0,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 1,
+        "thrust": 0.00
+      },
+      {
+        "windSpeed": 2,
+        "thrust": 0.96
+      },
+      {
+        "windSpeed": 3,
+        "thrust": 0.96
+      },
+      {
+        "windSpeed": 4,
+        "thrust": 0.95
+      },
+      {
+        "windSpeed": 5,
+        "thrust": 0.94
+      },
+      {
+        "windSpeed": 6,
+        "thrust": 0.92
+      },
+      {
+        "windSpeed": 7,
+        "thrust": 0.90
+      },
+      {
+        "windSpeed": 8,
+        "thrust": 0.87
+      },
+      {
+        "windSpeed": 9,
+        "thrust": 0.84
+      },
+      {
+        "windSpeed": 10,
+        "thrust": 0.78
+      },
+      {
+        "windSpeed": 11,
+        "thrust": 0.65
+      },
+      {
+        "windSpeed": 12,
+        "thrust": 0.52
+      },
+      {
+        "windSpeed": 13,
+        "thrust": 0.40
+      },
+      {
+        "windSpeed": 14,
+        "thrust": 0.30
+      },
+      {
+        "windSpeed": 15,
+        "thrust": 0.24
+      },
+      {
+        "windSpeed": 16,
+        "thrust": 0.19
+      },
+      {
+        "windSpeed": 17,
+        "thrust": 0.16
+      },
+      {
+        "windSpeed": 18,
+        "thrust": 0.13
+      },
+      {
+        "windSpeed": 19,
+        "thrust": 0.11
+      },
+      {
+        "windSpeed": 20,
+        "thrust": 0.10
+      },
+      {
+        "windSpeed": 21,
+        "thrust": 0.09
+      },
+      {
+        "windSpeed": 22,
+        "thrust": 0.08
+      },
+      {
+        "windSpeed": 23,
+        "thrust": 0.07
+      },
+      {
+        "windSpeed": 24,
+        "thrust": 0.06
+      },
+      {
+        "windSpeed": 25,
+        "thrust": 0.06
+      }
+    ],
     "cutIn": 3,
     "cutOut": 20
   }

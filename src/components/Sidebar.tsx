@@ -1,42 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import TurbineForm from './tabs/TurbineForm';
 import Toolbar from './tabs/Toolbar';
 import { Turbine } from '../types/Turbine';
 import turbinesPresets from './../assets/turbineTypes.json';
-import WindroseComponent from './tabs/WindRoseComp';
-import { Modes, useMode } from '../context/ModeContext';
+import { Modes, PlacementModes, useMode } from '../context/ModeContext';
 import './styles/Sidebar.css';
 import CalculatePower from './tabs/CalculatePower';
-import { WindroseData } from '../types/WindRose';
+import { Mast, NullWindrose2 } from '../types/WindRose';
 import { Point } from 'leaflet';
 import TurbineTypesList from './tabs/TurbineTypesList';
 import { AreaFeature } from '../types/GroundArea';
 import GroundAreas from './tabs/GroundAreas';
+import MastForm from './tabs/MastForm';
 
 type SidebarProps = {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
+  masts: Mast[];
+  setMasts: React.Dispatch<React.SetStateAction<Mast[]>>;
   groundAreas: AreaFeature[];
   setGroundAreas: React.Dispatch<React.SetStateAction<AreaFeature[]>>;
   activeGroundAreas: AreaFeature[];
   mapCenter: Point;
-  windroseData: WindroseData;
-  setWindroseData: (wr: WindroseData) => void;
   activeTurbine: Turbine[];
+  activeMasts: Mast[];
   onSave: (turbine: Turbine) => void;
+  onSaveMast: (mast: Mast) => void;
   onCancel: (id?: string) => void;
   onDelete: (id: string) => void;
+  onDeleteMast: (id: string) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, setGroundAreas, activeGroundAreas, mapCenter, windroseData, setWindroseData, activeTurbine, onSave, onCancel, onDelete }) => {
-  const { mode, setMode } = useMode();
+const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, masts, setMasts, groundAreas, setGroundAreas, activeGroundAreas, mapCenter, activeTurbine, activeMasts, onSave, onSaveMast, onCancel, onDelete, onDeleteMast }) => {
+  const { mode, setMode, placementMode, setPlacementMode } = useMode();
   const [showBtns, setShowBtns] = useState<boolean>(false);
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
   const isResizing = useRef(false);
 
-  const handleSave = (turbine: Turbine) => {
-    onSave(turbine);
-  };
 
   const handleCancel = () => {
     // Wenn activeTurbine eine Turbine enthält, übergebe deren ID an cancelEdit
@@ -47,11 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
     }
   };
 
-  const handleDelete = (id: string) => {
-    onDelete(id);
-  }
-
-  useEffect(() => { }, [mode]);
 
   const handleMouseEnter = () => setShowBtns(true);
   const handleMouseLeave = () => setShowBtns(false);
@@ -79,6 +74,27 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
 
   return (
     <div className="sidebar-container" style={{ width: sidebarWidth, position: 'relative' }}>
+      <div className="sidebar-btn-container" style={{ flexDirection: 'row', gap: '5%', width: '80%' }}>
+        {(<button
+          className={`sidebar-button shown ${placementMode === PlacementModes.Turbine ? 'active' : ''}`}
+          onClick={() => setPlacementMode(PlacementModes.Turbine)}
+        >
+          Setze Turbine
+        </button>)}
+        {(<button
+          className={`sidebar-button shown ${placementMode === PlacementModes.Mast ? 'active' : ''}`}
+          onClick={() => setPlacementMode(PlacementModes.Mast)}
+        >
+          Setze Mast
+        </button>)}
+        {(<button
+          className={`sidebar-button shown ${placementMode === PlacementModes.None ? 'active' : ''}`}
+          onClick={() => setPlacementMode(PlacementModes.None)}
+        >
+          Setze nichts
+        </button>)}
+      </div>
+      <hr style={{ width: '100%' }} />
       <div className="sidebar-btn-container" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Toolbar ? 'shown active' : ''}`}
@@ -93,8 +109,8 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
           Liste Turbinentypen
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.New || mode === Modes.Edit) ? 'shown active' : ''}`}
-          onClick={() => setMode(Modes.New)}
+          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewTurbine || mode === Modes.EditTurbine) ? 'shown active' : ''}`}
+          onClick={() => setMode(Modes.NewTurbine)}
         >
           Neue Turbine
         </button>)}
@@ -105,10 +121,10 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
           Ground Areas
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Windrose ? 'shown active' : ''}`}
-          onClick={() => setMode(Modes.Windrose)}
+          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewMast || mode === Modes.EditMast) ? 'shown active' : ''}`}
+          onClick={() => setMode(Modes.NewMast)}
         >
-          Windrose
+          Neuer Mast
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Calculate ? 'shown active' : ''}`}
@@ -120,12 +136,12 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
       <hr style={{ margin: '0 0 15px 0', width: '100%' }} />
       <div className='tab-container'>
         {mode === Modes.Toolbar && (
-          <Toolbar turbines={turbines} setTurbines={setTurbines} groundAreas={groundAreas} setGroundAreas={setGroundAreas} />
+          <Toolbar turbines={turbines} setTurbines={setTurbines} masts={masts} setMasts={setMasts} groundAreas={groundAreas} setGroundAreas={setGroundAreas} />
         )}
         {mode === Modes.TurbineTypes && (
           <TurbineTypesList />
         )}
-        {(mode === Modes.New) && (
+        {(mode === Modes.NewTurbine) && (
           <TurbineForm
             id={activeTurbine[0]?.id}
             lat={activeTurbine[0]?.lat || mapCenter.x}
@@ -134,15 +150,15 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
             type={turbinesPresets.find(t => t.name === 'DefaultNull')!}
             groundAreaID={""}
             available={true}
-            onSave={(turbine: Turbine) => handleSave(turbine)} // Sichere Übergabe der spezifischen Turbine
+            onSave={(turbine: Turbine) => onSave(turbine)} // Sichere Übergabe der spezifischen Turbine
             onCancel={handleCancel}
-            onDelete={handleDelete}
+            onDelete={onDelete}
           />
         )}
-        {(mode === Modes.Edit) && (
+        {(mode === Modes.EditTurbine) && (
           activeTurbine.map((at: Turbine) => (
             <TurbineForm
-              key={at.id}  // Ein Schlüssel hinzugefügt, um mehrere Turbinen zu unterscheiden
+              key={at.id}
               id={at.id}
               lat={at.lat}
               long={at.long}
@@ -150,9 +166,9 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
               type={at.type}
               groundAreaID={at.groundAreaID!}
               available={at.available}
-              onSave={(turbine: Turbine) => handleSave(turbine)}  // Sichere Übergabe der spezifischen Turbine
+              onSave={(turbine: Turbine) => onSave(turbine)}
               onCancel={handleCancel}
-              onDelete={handleDelete}
+              onDelete={onDelete}
             />
           ))
         )}
@@ -171,18 +187,42 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, groundAreas, s
             }}
           />
         )}
-        {mode === Modes.Windrose && (
-          <WindroseComponent
-            windroseData={windroseData}
-            setWindroseData={setWindroseData}
+        {(mode === Modes.NewMast) && (
+          <MastForm
+            id={activeMasts[0]?.id}
+            lat={activeMasts[0]?.lat || mapCenter.x}
+            long={activeMasts[0]?.long || mapCenter.y}
+            name={`Mast ${masts.length + 1}`}
+            windrose={activeMasts[0]?.windrose || NullWindrose2}
+            measureHeight={activeMasts[0]?.measureHeight || 10}
+            available={true}
+            onSave={(mast: Mast) => onSaveMast(mast)}
+            onCancel={handleCancel}
+            onDelete={onDeleteMast}
           />
+        )}
+        {(mode === Modes.EditMast) && (
+          activeMasts.map((am: Mast) => (
+            <MastForm 
+              key={am.id}
+              id={am.id}
+              name={am.name}
+              lat={am.lat}
+              long={am.long}
+              windrose={am.windrose}
+              measureHeight={am.measureHeight}
+              available={am.available}
+              onSave={(mast: Mast) => onSaveMast(mast)}
+              onCancel={handleCancel}
+              onDelete={onDeleteMast}
+            />
+          ))
         )}
         {mode === Modes.Calculate && (
           <CalculatePower
             turbines={turbines}
             setTurbines={setTurbines}
-            windrose={windroseData}
-            setWindrose={setWindroseData}
+            masts={masts}
             groundAreas={groundAreas}
           />
         )}

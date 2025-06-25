@@ -1,11 +1,14 @@
 import React from 'react';
 import { Turbine } from '../../types/Turbine';
-import { AreaFeature } from '../../types/GroundArea' // 👈 ggf. anpassen je nach Pfad
+import { AreaFeature } from '../../types/GroundArea'
 import '../styles/Toolbar.css';
+import { Mast } from '../../types/WindRose';
 
 type Props = {
   turbines: Turbine[];
   setTurbines: (t: Turbine[]) => void;
+  masts: Mast[];
+  setMasts: (m: Mast[]) => void;
   groundAreas: AreaFeature[];
   setGroundAreas: (areas: AreaFeature[]) => void;
 };
@@ -13,6 +16,8 @@ type Props = {
 const Toolbar: React.FC<Props> = ({
   turbines,
   setTurbines,
+  masts,
+  setMasts,
   groundAreas,
   setGroundAreas,
 }) => {
@@ -20,6 +25,7 @@ const Toolbar: React.FC<Props> = ({
   const exportData = () => {
     const exportObject = {
       turbines,
+      masts,
       groundAreas,
     };
 
@@ -50,9 +56,11 @@ const Toolbar: React.FC<Props> = ({
         }
 
         const turbinesData = Array.isArray(json.turbines) ? json.turbines : [];
+        const mastsData = Array.isArray(json.masts) ? json.masts : [];
         const areasData = Array.isArray(json.groundAreas) ? json.groundAreas : [];
 
         setTurbines(turbinesData);
+        setMasts(mastsData);
         setGroundAreas(areasData);
 
       } catch (err) {

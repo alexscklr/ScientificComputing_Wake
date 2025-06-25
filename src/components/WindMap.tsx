@@ -1,22 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Turbine } from '../types/Turbine';
-import { windTurbineIcon } from './parts/WindMapMarker';
+import { mastIcon, windTurbineIcon } from './parts/WindMapMarker';
 import { Map, Point } from 'leaflet';
 import CurrentCenterLogger from './parts/CurrentCenterLogger';
 import L from 'leaflet';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 import { AreaFeature, AreaProperties } from '../types/GroundArea';
+import { Mast } from '../types/WindRose';
 
 
 
 
-const MapClickHandler = ({ map, onAddTurbine, onDragMap }: { map: Map | undefined, onAddTurbine: (lat: number, lon: number) => void, onDragMap: (point: Point) => void }) => {
+const MapClickHandler = ({ map, onMapClick, onDragMap }: { map: Map | undefined, onMapClick: (lat: number, lon: number) => void, onDragMap: (point: Point) => void }) => {
   useMapEvents({
     click(e) {
-      onAddTurbine(e.latlng.lat, e.latlng.lng);
+      onMapClick(e.latlng.lat, e.latlng.lng);
     },
     drag() {
       if (map) onDragMap(new Point(map.getCenter().lat, map.getCenter().lng));
@@ -30,11 +31,13 @@ const DrawControl = ({
   map,
   drawnItems,
   onAddGroundArea,
+  onUpdateGroundArea,
   onGroundAreaClick,
 }: {
   map: L.Map | undefined;
   drawnItems: L.FeatureGroup;
   onAddGroundArea: (area: AreaFeature) => void;
+  onUpdateGroundArea: (area: AreaFeature) => void;
   onGroundAreaClick: (area: AreaFeature) => void;
 }) => {
   useEffect(() => {
@@ -89,7 +92,30 @@ const DrawControl = ({
       onAddGroundArea(geojson);
     };
 
+    const handleEdit = (event: any) => {
+      const layers = event.layers;
+      const updatedAreas: AreaFeature[] = [];
+
+      layers.eachLayer((layer: any) => {
+        if (!layer.feature || !layer.feature.properties?.id) return;
+
+        const updatedGeoJSON: AreaFeature = layer.toGeoJSON();
+        updatedGeoJSON.properties = {
+          ...layer.feature.properties, // wichtig: alte Properties übernehmen
+        };
+
+        updatedAreas.push(updatedGeoJSON);
+      });
+
+      updatedAreas.forEach(area => {
+        onUpdateGroundArea(area);
+      })
+    }
+
     map.on(L.Draw.Event.CREATED, handleCreate);
+    map.on(L.Draw.Event.EDITED, (e: any) => {
+      handleEdit(e);
+    });
 
     return () => {
       map.off(L.Draw.Event.CREATED, handleCreate);
@@ -103,7 +129,7 @@ const DrawControl = ({
 
 
 
-const updateMarkerPopups = (turbines: Turbine[], activeTurbines: Turbine[], markerRefs: any) => {
+const updateTurbineMarkerPopups = (turbines: Turbine[], activeTurbines: Turbine[], markerRefs: any) => {
   const timeout = setTimeout(() => {
     turbines.forEach(turbine => {
       const marker = markerRefs.current[turbine.id];
@@ -117,12 +143,30 @@ const updateMarkerPopups = (turbines: Turbine[], activeTurbines: Turbine[], mark
 
   return () => clearTimeout(timeout);
 };
+const updateMastMarkerPopups = (masts: Mast[], activeMasts: Mast[], markerRefs: any) => {
+  const timeout = setTimeout(() => {
+    masts.forEach(mast => {
+      const marker = markerRefs.current[mast.id];
+      if (marker && activeMasts.find(m => m.id === mast.id)) {
+        marker.openPopup();
+      } else if (marker) {
+        marker.closePopup();
+      }
+    });
+  }, 100);
+
+  return () => clearTimeout(timeout);
+};
 
 
 
-const isActive = (turbine: Turbine, activeTurbines: Turbine[]) => {
+const isActiveTurbine = (turbine: Turbine, activeTurbines: Turbine[]) => {
   return activeTurbines.some((t) => turbine.id === t.id);
 };
+const isActiveMast = (mast: Mast, activeMasts: Mast[]) => {
+  return activeMasts.some((m) => m.id === mast.id);
+}
+
 
 
 
@@ -130,27 +174,38 @@ const isActive = (turbine: Turbine, activeTurbines: Turbine[]) => {
 interface WindMapProps {
   turbines: Turbine[];
   activeTurbines: Turbine[];
+  masts: Mast[];
+  activeMasts: Mast[];
   groundAreas: AreaFeature[];
   setMapCenter: (center: Point) => void;
-  onAddTurbine: (lat: number, lon: number) => void;
+  onMapClick: (lat: number, lon: number) => void;
   onEditTurbine: (id: string, shiftPressed: boolean) => void;
+  onEditMast: (id: string, shiftPressed: boolean) => void;
   onDragTurbine: (id: string, lat: number, lng: number, shiftPressed: boolean) => void;
+  onDragMast: (id: string, lat: number, lng: number, shiftPressed: boolean) => void;
   onAddGroundArea: (area: AreaFeature) => void;
+  onEditGroundArea: (area: AreaFeature) => void;
   onGroundAreaClick: (area: AreaFeature) => void;
 }
 const WindMap: React.FC<WindMapProps> = ({
   turbines,
   activeTurbines,
+  masts,
+  activeMasts,
   groundAreas,
   setMapCenter,
-  onAddTurbine,
+  onMapClick,
   onEditTurbine,
+  onEditMast,
   onDragTurbine,
+  onDragMast,
   onAddGroundArea,
+  onEditGroundArea,
   onGroundAreaClick
 }) => {
   const [map, setMap] = useState<Map | undefined>(undefined);
-  const markerRefs = useRef<{ [key: string]: L.Marker }>({});
+  const turbineMarkerRefs = useRef<{ [key: string]: L.Marker }>({});
+  const mastMarkerRefs = useRef<{ [key: string]: L.Marker }>({});
   const drawnItems = useRef(new L.FeatureGroup());
   const shiftDragRef = useRef(false);
 
@@ -173,8 +228,9 @@ const WindMap: React.FC<WindMapProps> = ({
   }, [groundAreas, map]);
 
   useEffect(() => {
-    updateMarkerPopups(turbines, activeTurbines, markerRefs);
-  }, [activeTurbines, turbines]);
+    updateTurbineMarkerPopups(turbines, activeTurbines, turbineMarkerRefs);
+    updateMastMarkerPopups(masts, activeMasts, mastMarkerRefs)
+  }, [activeTurbines, turbines, activeMasts, masts]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -199,14 +255,21 @@ const WindMap: React.FC<WindMapProps> = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <CurrentCenterLogger setMap={setMap} />
-      <DrawControl map={map} drawnItems={drawnItems.current} onAddGroundArea={onAddGroundArea} onGroundAreaClick={onGroundAreaClick} />
-      <MapClickHandler map={map} onAddTurbine={onAddTurbine} onDragMap={setMapCenter} />
+      <DrawControl
+        map={map}
+        drawnItems={drawnItems.current}
+        onAddGroundArea={onAddGroundArea}
+        onGroundAreaClick={onGroundAreaClick}
+        onUpdateGroundArea={onEditGroundArea}
+      />
+
+      <MapClickHandler map={map} onMapClick={onMapClick} onDragMap={setMapCenter} />
 
       {turbines.map((turbine) => {
-        const isTurbineActive = isActive(turbine, activeTurbines);
+        const isTurbineActive = isActiveTurbine(turbine, activeTurbines);
         return (
           <Marker
-            ref={(el) => { if (el) markerRefs.current[turbine.id] = el; }}
+            ref={(el) => { if (el) turbineMarkerRefs.current[turbine.id] = el; }}
             key={turbine.id}
             position={[turbine.lat, turbine.long]}
             icon={turbine.available ? (isTurbineActive ? windTurbineIcon('green') : windTurbineIcon('red')) : windTurbineIcon('grey')}
@@ -243,6 +306,39 @@ const WindMap: React.FC<WindMapProps> = ({
           </Marker>
         );
       })}
+
+      {masts.map((mast) => {
+        const isMastActive = isActiveMast(mast, activeMasts);
+        return (
+          <Marker
+            ref={(el) => { if (el) mastMarkerRefs.current[mast.id] = el; }}
+            key={mast.id}
+            position={[mast.lat, mast.long]}
+            icon={mast.available ? (isMastActive ? mastIcon('green') : mastIcon('blue')) : mastIcon('grey')}
+            draggable={true}
+            eventHandlers={{
+              mousedown: (e) => {
+                shiftDragRef.current = (e.originalEvent as MouseEvent).ctrlKey;
+              },
+              dragend: (e) => {
+                const { lat, lng } = e.target.getLatLng();
+                onDragMast(mast.id, lat, lng, shiftDragRef.current);
+              },
+              click: (e) => {
+                onEditMast(mast.id, (e.originalEvent as MouseEvent).ctrlKey);
+              },
+            }}
+          >
+            <Popup closeOnClick={false} autoClose={false}>
+              <p style={{ margin: '0' }}>{mast.name}</p><br />
+              <hr style={{ marginTop: '0' }} />
+              {mast?.name}<br />
+              {mast.lat.toFixed(5)}, {mast.long.toFixed(5)}<br />
+            </Popup>
+          </Marker>
+        );
+      })}
+
     </MapContainer>
   );
 };

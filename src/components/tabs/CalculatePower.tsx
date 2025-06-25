@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Turbine } from '../../types/Turbine';
-import { WindroseData } from '../../types/WindRose';
+import { Mast } from '../../types/WindRose';
 import { calculateWithoutWake } from '../../utils/CalculateWithoutWake';
 import { calculateWithWake } from '../../utils/CalculateWithWake'; // 👈 wichtig
 import '../styles/CalculatePower.css';
@@ -10,15 +10,14 @@ import PopupMessage from '../parts/PopupMessage';
 interface CalculatePowerProps {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
-  windrose: WindroseData;
-  setWindrose: (wr: WindroseData) => void;
+  masts: Mast[];
   groundAreas: AreaFeature[];
 }
 
 const CalculatePower: React.FC<CalculatePowerProps> = ({
   turbines,
   setTurbines,
-  windrose,
+  masts,
   groundAreas
 }) => {
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
@@ -27,7 +26,7 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
   const energyWinRaw = useRef<number>(0);
   const energyWinWake = useRef<number>(0);
 
-  const [maxWakeDistance, setMaxWakeDistance] = useState<number>(5);
+  const [maxWakeDistance, setMaxWakeDistance] = useState<number>(50);
   const [timeInHr, setTimeInHr] = useState<number>(1);
 
   const [turbines1, setTurbines1] = useState<Turbine[]>(turbines);
@@ -64,23 +63,21 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
 
   const handleNoWakeCalc = () => {
     calculateWithoutWake({
-      windrose,
       turbines: turbines1,
       groundAreas: groundAreas,
+      masts,
       setTurbines: setTurbines1,
-      energyWin: energyWinRaw,
-      elevation: windrose.elevation,
+      energyWin: energyWinRaw
     });
   }
   const handleWakeCalc = () => {
     calculateWithWake({
-      windrose,
+      masts: masts,
       turbines: turbines2,
       setTurbines: setTurbines2,
       energyWin: energyWinWake,
-      elevation: windrose.elevation,
+      groundAreas: groundAreas,
       maxWakeDistance: maxWakeDistance,
-      groundAreas: groundAreas
     });
   }
 
@@ -92,9 +89,9 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
     }
     return true;
   }
-  const checkForWindrose = () => {
-    if (windrose === undefined) {
-      setMessage('Keine Windrose vorhanden');
+  const checkForMasts = () => {
+    if (masts.length <= 0) {
+      setMessage('Keine Masten vorhanden');
       setMessageVisible(true);
       return false;
     }
@@ -115,7 +112,7 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
     event.preventDefault();
 
     if (!checkForTurbines()) return;
-    if (!checkForWindrose()) return;
+    if (!checkForMasts()) return;
     if (!checkForGroundAreas()) return;
 
     setTurbines1(turbines);
@@ -157,7 +154,7 @@ const CalculatePower: React.FC<CalculatePowerProps> = ({
             </label>
           </div>
           <button type="submit" className="calculate-btn" style={{position: 'relative'}}>
-            🔍 Berechne mit Wake <PopupMessage message={message} visible={messageVisible} setVisible={setMessageVisible} />
+            🔍 Berechne Energiegewinn <PopupMessage message={message} visible={messageVisible} setVisible={setMessageVisible} />
           </button>
         </form>
       </div>

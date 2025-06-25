@@ -194,7 +194,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, gr
       </label>
 
       {/* Layout-Modus Umschalter */}
-      {mode === Modes.New && (
+      {mode === Modes.NewTurbine && (
         <>
           <div className="layout-toggle">
             <label className="turbine-form-label flexRow">
@@ -271,7 +271,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, gr
         >
           ❌ Abbrechen
         </button>
-        {mode === 'edit' && (<button
+        {mode === Modes.EditTurbine && (<button
           onClick={handleDelete}
           className="turbine-form-btn delete"
         >

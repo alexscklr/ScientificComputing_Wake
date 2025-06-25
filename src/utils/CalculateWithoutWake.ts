@@ -1,29 +1,31 @@
 import { RefObject } from "react";
 import { Turbine } from "../types/Turbine";
-import { SpeedUnits, WindroseData } from "../types/WindRose";
-
-import { convertSpeedUnits, GetWindProfileLogarithmic, GetWindProfilePowerLaw, interpolatePower } from "./CalculationFunctions";
+import { SpeedUnits, WindroseEntry } from "../types/WindRose";
 import { AreaFeature } from "../types/GroundArea";
-
-
+import { Mast } from "../types/WindRose";
+import {
+  convertSpeedUnits,
+  GetWindProfileLogarithmic,
+  interpolatePower,
+  interpolateWindroses
+} from "./CalculationFunctions";
 
 interface FunctionProps {
-  windrose: WindroseData | undefined,
-  turbines: Turbine[],
-  groundAreas : AreaFeature[];
-  setTurbines: (t: Turbine[]) => void,
-  energyWin: RefObject<number>,
-  elevation: number
+  turbines: Turbine[];
+  groundAreas: AreaFeature[];
+  masts: Mast[];
+  setTurbines: (t: Turbine[]) => void;
+  energyWin: RefObject<number>;
 }
-export const calculateWithoutWake = (functionProps: FunctionProps) => {
-  const { windrose, turbines, groundAreas, setTurbines, energyWin } = functionProps;
 
+export const calculateWithoutWake = ({
+  turbines,
+  groundAreas,
+  masts,
+  setTurbines,
+  energyWin
+}: FunctionProps) => {
   energyWin.current = 0;
-
-  if (!windrose || !windrose.data || !windrose.speedBins) {
-    alert("Es ist ein Fehler mit der Windrose aufgekommen!");
-    return;
-  }
 
   if (!turbines || turbines.length < 1) {
     alert("Keine Windturbinen vorhanden");
@@ -31,28 +33,38 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
   }
 
   const updatedTurbines = turbines.map((turbine) => {
-    if (!turbine.available || turbine.type.name === 'DefaultNull') {
+    if (!turbine.available || turbine.type.name === "DefaultNull") {
       return {
         ...turbine,
-        powerWithoutWake: 0,
+        powerWithoutWake: 0
       };
     }
 
+    const interpolatedWindrose = interpolateWindroses(turbine, masts, groundAreas);
     const { cutIn, cutOut, powerCurve } = turbine.type;
     let totalPower = 0;
 
-    windrose.data.forEach((entry) => {
+    interpolatedWindrose.windrose.data.forEach((entry: WindroseEntry) => {
       entry.frequencies.forEach((freqPercent: number, i: number) => {
-        const speedBin = windrose.speedBins[i];
+        const speedBin = interpolatedWindrose.windrose.speedBins[i];
         if (!speedBin) return;
 
         const avgWindSpeed =
           (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
 
-        let windSpeedMs = convertSpeedUnits(avgWindSpeed, windrose.speedUnit, SpeedUnits.ms);
+        let windSpeedMs = convertSpeedUnits(avgWindSpeed, interpolatedWindrose.windrose.speedUnit, SpeedUnits.ms);
 
-        const z0 = turbine.groundAreaID ? groundAreas.find((a) => a.properties.id === turbine.groundAreaID)?.properties.z0 ?? 0.03 : 0.03;
-        windSpeedMs = GetWindProfileLogarithmic(windSpeedMs, turbine.type.hubHeight, windrose.elevation, z0);
+        // z0 aus GroundArea (falls vorhanden)
+        const z0 = turbine.groundAreaID
+          ? groundAreas.find((a) => a.properties.id === turbine.groundAreaID)?.properties.z0 ?? 0.03
+          : 0.03;
+          
+        windSpeedMs = GetWindProfileLogarithmic(
+          windSpeedMs,
+          turbine.type.hubHeight,
+          interpolatedWindrose.elevation,
+          z0
+        );
 
         if (windSpeedMs < cutIn || windSpeedMs > cutOut) return;
 
@@ -62,18 +74,16 @@ export const calculateWithoutWake = (functionProps: FunctionProps) => {
       });
     });
 
-    const calmFactor = windrose.calmFrequency / 100;
-    totalPower *= (1 - calmFactor);
+    const calmFactor = interpolatedWindrose.windrose.calmFrequency / 100;
+    totalPower *= 1 - calmFactor;
 
-    // Nur aufsummieren, wenn die Turbine aktiv ist
     energyWin.current += totalPower;
 
     return {
       ...turbine,
-      powerWithoutWake: totalPower,
+      powerWithoutWake: totalPower
     };
   });
 
   setTurbines(updatedTurbines);
 };
-

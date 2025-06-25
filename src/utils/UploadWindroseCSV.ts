@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { WindroseData, WindroseEntry, SpeedUnits, speedBins } from "../types/WindRose";
+import { WindroseData, WindroseEntry, SpeedUnits, speedBins, Windrose } from "../types/WindRose";
 
 
 export const parseCsvToWindrose = (csvString: string): WindroseData => {
@@ -128,5 +128,75 @@ export const convertToWindrose = (csv: string, dataCount: RefObject<number>, dat
         speedUnit: SpeedUnits.knt, // Beispiel: Geschwindigkeitseinheit als 'km/h', kann angepasst werden
         data: result,
         elevation: 10
+    };
+};
+export const convertToWindrose2 = (csv: string, dataCount: RefObject<number>, dataErrors: RefObject<number>, frequencySum: RefObject<number>): Windrose => {
+    const lines = csv.trim().split('\n');
+    const dataLines = lines.slice(1); // Erste Zeile sind Header
+
+    const directionBins = Array.from({ length: 36 }, (_, i) => i * 10);
+
+    // Zähle die Häufigkeit für jede Richtung und jedes Speed-Bin
+    const counts = directionBins.map(() => Array(speedBins.length).fill(0));
+    let totalCount = 0;
+
+    // Gehe jede Zeile durch
+    for (const line of dataLines) {
+        const parts = line.split(',');
+
+        const dir = parseFloat(parts[2]);
+        const spd = parseFloat(parts[3]);
+
+        dataCount.current++;
+        // Überprüfe, ob die Werte für Richtung und Geschwindigkeit gültig sind (nicht NaN und > 0)
+        if (isNaN(dir) || isNaN(spd) || dir <= 0 || spd <= 0) {
+            //console.warn(`Ungültige Werte: Richtung = ${dir}, Geschwindigkeit = ${spd}`);
+            dataErrors.current++;
+            continue; // Überspringe diese Zeile, wenn die Werte ungültig sind
+        }
+
+        // Bestimme die Richtung-Bin
+        const dirIndex = Math.floor(dir / 10) % 36; // In 10°-Schritte
+        // Bestimme das Speed-Bin
+        const spdIndex = speedBins.findIndex(([min, max]) => spd >= min && spd < max);
+
+        // Überprüfe, ob dirIndex und spdIndex gültige Indizes sind
+        if (dirIndex >= 0 && dirIndex < directionBins.length && spdIndex >= 0 && spdIndex < speedBins.length) {
+            counts[dirIndex][spdIndex]++;
+            totalCount++;
+        } else {
+            //console.warn(`Ungültige Indizes für Richtung ${dir} und Geschwindigkeit ${spd}`);
+            continue;
+        }
+    }
+
+    // Fehlerbehandlung: Überprüfen, ob counts und totalCount korrekt sind
+    if (totalCount === 0) {
+        console.error("Fehler: Es wurden keine gültigen Daten gefunden!");
+        return {
+            name: 'Windrose von API-Daten',
+            calmFrequency: 0,
+            speedBins,
+            speedUnit: SpeedUnits.knt,
+            data: []
+        };
+    }
+
+    // Normalisiere auf 100%
+    const result: WindroseEntry[] = directionBins.map((dir, i) => {
+        const frequencies = counts[i].map((count) => (count / totalCount) * 100); // Häufigkeit in %
+        frequencies.forEach((f) => frequencySum.current += f);
+        return {
+            directionRange: [dir, dir + 10], // Range von 10° (z. B. [0, 10], [10, 20], ...)
+            frequencies,
+        };
+    });
+
+    return {
+        name: 'Windrose von API-Daten',
+        calmFrequency: 0,
+        speedBins,
+        speedUnit: SpeedUnits.knt,
+        data: result
     };
 };
