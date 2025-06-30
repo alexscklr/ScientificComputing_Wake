@@ -13,6 +13,7 @@ import { assignGroundAreaDataToTurbines } from './utils/GroundAreaToTurbines';
 
 function App() {
   const [turbines, setTurbines] = useState<Turbine[]>([]);
+  const [turbineTypes, setTurbineTypes] = useState<TurbineType[]>(turbinesPresets);
   const [masts, setMasts] = useState<Mast[]>([]);
   const [groundAreas, setGroundAreas] = useState<AreaFeature[]>([]);
   const [mapCenter, setMapCenter] = useState<Point>(new Point(51.6369, 8.234));
@@ -26,7 +27,7 @@ function App() {
       const newTurbine: Turbine = {
         id: crypto.randomUUID(), // Generiere eine eindeutige ID
         name: `Wind Turbine ${turbines.length + 1}`,
-        type: turbinesPresets.find((t: TurbineType) => t.name === "DefaultNull") || turbinesPresets[0],
+        type: turbineTypes.find((t: TurbineType) => t.name === "DefaultNull") || turbineTypes[0],
         lat,
         long,
         available: true,
@@ -293,6 +294,8 @@ function App() {
       <Sidebar
         turbines={turbines}
         setTurbines={setTurbines}
+        turbineTypes={turbineTypes}
+        setTurbineTypes={setTurbineTypes}
         masts={masts}
         setMasts={setMasts}
         groundAreas={groundAreas}

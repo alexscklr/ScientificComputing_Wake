@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Turbine, TurbineType, isTurbineType } from '../../types/Turbine';
-import turbinePresets from './../../assets/turbineTypes.json';
 import './../styles/TurbineForm.css';
 import PopupMessage from '../parts/PopupMessage';
 import { Modes, useMode } from '../../context/ModeContext';
@@ -16,9 +15,10 @@ interface TurbineFormProps {
   onSave: (turbine: Turbine) => void;
   onCancel: (id?: string) => void;
   onDelete: (id: string) => void;
+  turbineTypes: TurbineType[];
 }
 
-const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, groundAreaID, available, onSave, onCancel, onDelete }) => {
+const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, groundAreaID, available, onSave, onCancel, onDelete, turbineTypes }) => {
   const [formData, setFormData] = useState({ id, name, lat, long, type, groundAreaID, available });
   const [messageVisible, setMessageVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
@@ -46,13 +46,13 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, gr
 
   const getKeyForType = (type: TurbineType): string => {
     if (!type) return 'DefaultNull';
-    const entry = Object.entries(turbinePresets).find(([_, val]) => val.name === type.name);
+    const entry = Object.entries(turbineTypes).find(([_, val]) => val.name === type.name);
     return entry ? entry[0] : 'DefaultNull';
   };
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const key = e.target.value as keyof typeof turbinePresets;
-    const selected = turbinePresets[key];
+    const key = e.target.value as keyof typeof turbineTypes;
+    const selected = turbineTypes[key];
 
     if (isTurbineType(selected)) {
       setFormData((prev) => ({
@@ -152,7 +152,7 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, gr
           onChange={handleTypeChange}
           className="turbine-form-input"
         >
-          {Object.entries(turbinePresets).map(([key, turbineType]) => (
+          {Object.entries(turbineTypes).map(([key, turbineType]) => (
             <option key={key} value={key}>
               {turbineType.name}
             </option>

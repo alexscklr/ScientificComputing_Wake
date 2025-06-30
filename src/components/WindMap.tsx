@@ -27,6 +27,8 @@ const MapClickHandler = ({ map, onMapClick, onDragMap }: { map: Map | undefined,
   return null;
 };
 
+
+
 const DrawControl = ({
   map,
   drawnItems,

@@ -141,7 +141,7 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
           return { ...t, xRel: x, yRel: y };
         });
 
-        // Nach Upwind sortieren
+        // Nach Upstream sortieren
         projected.sort((a, b) => a.xRel - b.xRel);
 
         // Ziel-Turbine im sortierten Array finden

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Turbine } from '../../types/Turbine';
+import { Turbine, TurbineType } from '../../types/Turbine';
 import { AreaFeature } from '../../types/GroundArea'
+import turbinePresets from '../../assets/turbineTypes.json'
 import '../styles/Toolbar.css';
 import { Mast } from '../../types/WindRose';
 
@@ -11,6 +12,8 @@ type Props = {
   setMasts: (m: Mast[]) => void;
   groundAreas: AreaFeature[];
   setGroundAreas: (areas: AreaFeature[]) => void;
+  turbineTypes: TurbineType[];
+  setTurbineTypes: (t: TurbineType[]) => void;
 };
 
 const Toolbar: React.FC<Props> = ({
@@ -20,6 +23,8 @@ const Toolbar: React.FC<Props> = ({
   setMasts,
   groundAreas,
   setGroundAreas,
+  turbineTypes,
+  setTurbineTypes
 }) => {
 
   const exportData = () => {
@@ -27,6 +32,8 @@ const Toolbar: React.FC<Props> = ({
       turbines,
       masts,
       groundAreas,
+      turbineTypes,
+      setTurbineTypes
     };
 
     const dataStr = JSON.stringify(exportObject, null, 2);
@@ -58,13 +65,24 @@ const Toolbar: React.FC<Props> = ({
         const turbinesData = Array.isArray(json.turbines) ? json.turbines : [];
         const mastsData = Array.isArray(json.masts) ? json.masts : [];
         const areasData = Array.isArray(json.groundAreas) ? json.groundAreas : [];
+        const turbineTypesData = Array.isArray(json.turbineTypes) ? json.turbineTypes : [];
+
+        if (!turbineTypesData.find((tt: TurbineType) => tt.name === 'DefaultNull')) {
+          turbineTypesData.push(turbinePresets[0]);
+        }
+        turbinesData.array.forEach((t: Turbine) => {
+          if (!turbineTypesData.find((tt: TurbineType) => tt.name === t.type.name)) {
+            turbineTypesData.push(t.type);
+          }
+        });
 
         setTurbines(turbinesData);
         setMasts(mastsData);
         setGroundAreas(areasData);
+        setTurbineTypes(turbineTypesData);
 
-      } catch (err) {
-        alert('⚠️ Fehler beim Laden der Datei');
+      } catch (err: any) {
+        alert(`⚠️ Fehler beim Laden der Datei:  ${err.message}`);
       }
     };
     reader.readAsText(file);
@@ -72,7 +90,7 @@ const Toolbar: React.FC<Props> = ({
 
   return (
     <div className="toolbar-section">
-      <h3>🌪️ Turbinen & Flächen</h3>
+      <h3>🌪️ Daten</h3>
       <button onClick={exportData}>📤 Exportieren</button>
       <label>
         📥 Importieren:

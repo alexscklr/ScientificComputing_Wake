@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import TurbineForm from './tabs/TurbineForm';
 import Toolbar from './tabs/Toolbar';
-import { Turbine } from '../types/Turbine';
-import turbinesPresets from './../assets/turbineTypes.json';
+import { Turbine, TurbineType } from '../types/Turbine';
 import { Modes, PlacementModes, useMode } from '../context/ModeContext';
 import './styles/Sidebar.css';
 import CalculatePower from './tabs/CalculatePower';
@@ -16,6 +15,8 @@ import MastForm from './tabs/MastForm';
 type SidebarProps = {
   turbines: Turbine[];
   setTurbines: React.Dispatch<React.SetStateAction<Turbine[]>>;
+  turbineTypes: TurbineType[];
+  setTurbineTypes: React.Dispatch<React.SetStateAction<TurbineType[]>>;
   masts: Mast[];
   setMasts: React.Dispatch<React.SetStateAction<Mast[]>>;
   groundAreas: AreaFeature[];
@@ -31,7 +32,7 @@ type SidebarProps = {
   onDeleteMast: (id: string) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, masts, setMasts, groundAreas, setGroundAreas, activeGroundAreas, mapCenter, activeTurbine, activeMasts, onSave, onSaveMast, onCancel, onDelete, onDeleteMast }) => {
+const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, setTurbineTypes, masts, setMasts, groundAreas, setGroundAreas, activeGroundAreas, mapCenter, activeTurbine, activeMasts, onSave, onSaveMast, onCancel, onDelete, onDeleteMast }) => {
   const { mode, setMode, placementMode, setPlacementMode } = useMode();
   const [showBtns, setShowBtns] = useState<boolean>(false);
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
@@ -136,10 +137,13 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, masts, setMast
       <hr style={{ margin: '0 0 15px 0', width: '100%' }} />
       <div className='tab-container'>
         {mode === Modes.Toolbar && (
-          <Toolbar turbines={turbines} setTurbines={setTurbines} masts={masts} setMasts={setMasts} groundAreas={groundAreas} setGroundAreas={setGroundAreas} />
+          <Toolbar turbines={turbines} setTurbines={setTurbines} masts={masts} setMasts={setMasts} groundAreas={groundAreas} setGroundAreas={setGroundAreas} turbineTypes={turbineTypes} setTurbineTypes={setTurbineTypes}/>
         )}
         {mode === Modes.TurbineTypes && (
-          <TurbineTypesList />
+          <TurbineTypesList 
+            turbineTypes={turbineTypes}
+            setTurbineTypes={setTurbineTypes}
+          />
         )}
         {(mode === Modes.NewTurbine) && (
           <TurbineForm
@@ -147,12 +151,13 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, masts, setMast
             lat={activeTurbine[0]?.lat || mapCenter.x}
             long={activeTurbine[0]?.long || mapCenter.y}
             name={`Wind Turbine ${turbines.length + 1}`}
-            type={turbinesPresets.find(t => t.name === 'DefaultNull')!}
+            type={turbineTypes.find(t => t.name === 'DefaultNull')!}
             groundAreaID={""}
             available={true}
             onSave={(turbine: Turbine) => onSave(turbine)} // Sichere Übergabe der spezifischen Turbine
             onCancel={handleCancel}
             onDelete={onDelete}
+            turbineTypes={turbineTypes}
           />
         )}
         {(mode === Modes.EditTurbine) && (
@@ -169,6 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, masts, setMast
               onSave={(turbine: Turbine) => onSave(turbine)}
               onCancel={handleCancel}
               onDelete={onDelete}
+              turbineTypes={turbineTypes}
             />
           ))
         )}

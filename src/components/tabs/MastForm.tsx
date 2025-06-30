@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import './../styles/TurbineForm.css';
+import './../styles/MastForm.css';
 import PopupMessage from '../parts/PopupMessage';
 import { Modes, useMode } from '../../context/ModeContext';
 import { Mast, Windrose } from '../../types/WindRose';
@@ -68,79 +68,79 @@ const MastForm: React.FC<MastFormProps> = ({ id, name, lat, long, windrose, meas
 
 
   return (
-    <div className="turbine-form-container">
-      <label className="turbine-form-label">
+    <div className="mast-form-container">
+      <label className="mast-form-label">
         Name:
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          className="turbine-form-input"
+          className="mast-form-input"
         />
       </label>
 
-      <label className="turbine-form-label">
+      <label className="mast-form-label">
         Latitude:
         <input
           type="number"
           name="lat"
           value={formData.lat}
           onChange={handleInputChange}
-          className="turbine-form-input"
+          className="mast-form-input"
         />
       </label>
 
-      <label className="turbine-form-label">
+      <label className="mast-form-label">
         Longitude:
         <input
           type="number"
           name="long"
           value={formData.long}
           onChange={handleInputChange}
-          className="turbine-form-input"
+          className="mast-form-input"
         />
       </label>
-      <label className="turbine-form-label">
+      <label className="mast-form-label">
         Measure Height:
         <input
           type="number"
           name="measureHeight"
           value={formData.measureHeight}
           onChange={handleInputChange}
-          className="turbine-form-input"
+          className="mast-form-input"
         />
       </label>
 
-      <label className="turbine-form-label flexRow">
+      <label className="mast-form-label flexRow">
         Verfügbar:
         <input
           type="checkbox"
           name="available"
           checked={formData.available}
           onChange={handleInputChange}
-          className="turbine-form-input"
+          className="mast-form-input"
         />
       </label>
 
       <WindRoseInput windrose={formData.windrose} setWindrose={setWindrose} />
 
-      <div className="turbine-form-btn-container">
+      <div className="mast-form-btn-container">
         <button
           onClick={handleSave}
-          className="turbine-form-btn save"
+          className="mast-form-btn save"
         >
           💾 Speichern <PopupMessage message={message} visible={messageVisible} setVisible={setMessageVisible} />
         </button>
         <button
           onClick={handleCancel}
-          className="turbine-form-btn cancel"
+          className="mast-form-btn cancel"
         >
           ❌ Abbrechen
         </button>
         {mode === Modes.EditMast && (<button
           onClick={handleDelete}
-          className="turbine-form-btn delete"
+          className="mast-form-btn delete"
         >
           🗑️ Delete
         </button>)}

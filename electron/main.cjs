@@ -1,21 +1,32 @@
 // electron/main.cjs
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
+const { dialog } = require('electron');
+if (process.env.NODE_ENV === 'development') {
+  require('electron-reload')(__dirname, {
+    electron: require(`${__dirname}/../../node_modules/electron`),
+    files: [
+      '**/*.js',
+      '**/*.html',
+      '**/*.css'
+    ]
+  });
+}
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, '../public/logo.ico'),
     webPreferences: {
-      nodeIntegration: false, // meistens false für React Apps
+      preload: path.join(__dirname, '/preload.js'), // Preload Skript einfügen
       contextIsolation: true,
     },
   });
 
-  // Pfad zur gebauten React-App (dist oder build Ordner)
   win.loadURL(`file://${path.resolve(__dirname, '../dist/index.html').replace(/\\/g, '/')}`);
-
 }
 
 app.whenReady().then(createWindow);

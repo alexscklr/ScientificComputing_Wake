@@ -5,12 +5,12 @@
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
-    "dev": "vite",
+    "dev": "cross-env NODE_ENV=development vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron:start": "npm run build && electron ./electron/main.cjs",
-    "electron:build": "npm run build && electron-builder"
+    "electron:start": "cross-env NODE_ENV=development npm run build && electron ./electron/main.cjs",
+    "electron:build": "cross-env NODE_ENV=production npm run build && electron-builder"
   },
   "dependencies": {
     "@turf/turf": "^7.2.0",
@@ -31,8 +31,10 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^7.0.3",
     "electron": "^26.0.0",
     "electron-builder": "^24.13.3",
+    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
