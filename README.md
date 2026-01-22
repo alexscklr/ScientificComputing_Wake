@@ -1,54 +1,95 @@
-# React + TypeScript + Vite
+# WindTurbine PowerModel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Eine wissenschaftliche Anwendung zur Simulation und Berechnung von Windenergieanlagen, spezialisiert auf die Analyse von Wake-Effekten (Nachlaufströmungen) und die Optimierung von Windpark-Layouts.
 
-Currently, two official plugins are available:
+Die Anwendung wurde mit React, TypeScript, Leaflet und Electron entwickelt und bietet sowohl eine browserbasierte Nutzung als auch eine eigenständige Desktop-Anwendung.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Funktionen
 
-## Expanding the ESLint configuration
+*   **Interaktives Windpark-Layout:**
+    *   Platzierung von Windkraftanlagen und Messmasten auf einer Karte (Leaflet).
+    *   Unterstützung verschiedener Kartenmodi (Satellit, Gelände, etc.).
+    *   Definition von Grundflächen (Ground Areas) für potenzielle Windparks.
+*   **Wake-Modellierung:**
+    *   Berechnung der gegenseitigen Abschattung von Anlagen (Wake Effects).
+    *   Vergleich von Berechnungen mit und ohne Wake-Effekte.
+*   **Ertragsanalyse:**
+    *   Integration von Winddaten (Windrosen).
+    *   Verwaltung verschiedener Turbinentypen und Leistungskennlinien.
+    *   Berechnung des erwarteten Energieertrags (AEP).
+*   **Datenmanagement:**
+    *   Import von Windmessdaten (CSV Import).
+    *   Anpassbare Turbinen-Presets.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Technologie-Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+*   **Frontend:** [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)
+*   **Build Tool:** [Vite](https://vitejs.dev/)
+*   **Desktop Wrapper:** [Electron](https://www.electronjs.org/)
+*   **Karten & Visualisierung:**
+    *   [Leaflet](https://leafletjs.com/) / [React-Leaflet](https://react-leaflet.js.org/)
+    *   [Turf.js](https://turfjs.org/) (Geospatial Analysis)
+    *   [Recharts](https://recharts.org/) / [ECharts](https://echarts.apache.org/) (Diagramme)
+
+## Installation
+
+Stellen Sie sicher, dass [Node.js](https://nodejs.org/) installiert ist.
+
+1.  Repository klonen (falls zutreffend).
+2.  Abhängigkeiten installieren:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Verwendung
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Entwicklung (Web)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+Startet den lokalen Entwicklungsserver mit Hot Module Replacement (HMR). Ideal für die UI-Entwicklung.
+
+```bash
+npm run dev
 ```
+
+Die Anwendung ist anschließend unter `http://localhost:5173` erreichbar.
+
+### Entwicklung (Electron)
+
+Baut die Anwendung und startet sie im Electron-Container.
+
+```bash
+npm run electron:start
+```
+
+*Hinweis: Dieser Befehl führt vor dem Start einen Build durch.*
+
+### Build erstellen
+
+Erstellt eine optimierte Produktionsversion der Web-Anwendung im Ordner `dist`.
+
+```bash
+npm run build
+```
+
+### Desktop-Anwendung bauen
+
+Erstellt die ausführbaren Dateien für das Betriebssystem (Windows/Mac/Linux) mithilfe von Electron Builder.
+
+```bash
+npm run electron:build
+```
+
+## Projektstruktur
+
+*   `src/`: Quellcode der React-Anwendung.
+    *   `components/`: Wiederverwendbare UI-Komponenten (Map, Sidebar, etc.).
+    *   `context/`: Globaler State (z.B. ModeContext).
+    *   `types/`: TypeScript-Definitionen (Turbine, WindRose, etc.).
+    *   `utils/`: Berechnungslogik (Wake-Modelle, Geometrie).
+*   `electron/`: Main-Prozess und Preload-Skripte für Electron.
+*   `public/`: Statische Assets.
+
+## Lizenz
+
+Privates Projekt.

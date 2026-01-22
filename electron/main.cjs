@@ -6,7 +6,7 @@ const fs = require('fs');
 const { dialog } = require('electron');
 if (process.env.NODE_ENV === 'development') {
   require('electron-reload')(__dirname, {
-    electron: require(`${__dirname}/../../node_modules/electron`),
+    electron: process.execPath,
     files: [
       '**/*.js',
       '**/*.html',
