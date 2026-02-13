@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import { TurbineType } from '../../types/Turbine';
 
-const initialTurbine: TurbineType = turbinePresets.find(tp => tp.name === 'DefaulNull')!;
+const initialTurbine: TurbineType = turbinePresets.find(tp => tp.name === 'DefaultNull')!;
 
 type TurbineTypesListProps = {
     turbineTypes: TurbineType[];
