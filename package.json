@@ -7,10 +7,11 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "build": "tsc -b && vite build",
+    "build:electron": "tsc -b && cross-env ELECTRON_BUILD=true vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron:start": "cross-env NODE_ENV=development npm run build && electron ./electron/main.cjs",
-    "electron:build": "cross-env NODE_ENV=production npm run build && electron-builder"
+    "electron:start": "cross-env NODE_ENV=development npm run build:electron && electron ./electron/main.cjs",
+    "electron:build": "cross-env NODE_ENV=production npm run build:electron && electron-builder"
   },
   "dependencies": {
     "@turf/turf": "^7.2.0",
