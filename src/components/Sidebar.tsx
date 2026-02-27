@@ -232,42 +232,42 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
         } : {}}
       >
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Toolbar ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${mode === Modes.Toolbar ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Toolbar)}
           style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Tools
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.TurbineTypes ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${mode === Modes.TurbineTypes ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.TurbineTypes)}
           style={isMobile ? { minWidth: '140px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Turbinen-Arten
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewTurbine || mode === Modes.EditTurbine) ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${(mode === Modes.NewTurbine || mode === Modes.EditTurbine) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.NewTurbine)}
           style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Neue Turbine
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.GroundAreas) ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${(mode === Modes.GroundAreas) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.GroundAreas)}
           style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Ground Areas
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewMast || mode === Modes.EditMast) ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${(mode === Modes.NewMast || mode === Modes.EditMast) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.NewMast)}
           style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Neuer Mast
         </button>)}
         {(<button
-          className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Calculate ? 'shown active' : ''}`}
+          className={`sidebar-button ${showBtns || isMobile ? 'shown' : ''} ${mode === Modes.Calculate ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Calculate)}
           style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
