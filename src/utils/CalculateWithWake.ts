@@ -128,7 +128,7 @@ export const calculateWithWake = (functionProps: FunctionProps) => {
         const avgWindSpeed =
           (speedBin[0] + (speedBin[1] === Infinity ? speedBin[0] + 2 : speedBin[1])) / 2;
 
-        let baseWindSpeedMs = convertSpeedUnits(avgWindSpeed, interpolatedWindrose.windrose.speedUnit, SpeedUnits.ms);
+        const baseWindSpeedMs = convertSpeedUnits(avgWindSpeed, interpolatedWindrose.windrose.speedUnit, SpeedUnits.ms);
         if (baseWindSpeedMs <= 0) continue;
 
         const availableTurbines = updatedTurbines.filter((t) => t.available !== false);

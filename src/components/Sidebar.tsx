@@ -36,8 +36,31 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
   const { mode, setMode, placementMode, setPlacementMode } = useMode();
   const [showBtns, setShowBtns] = useState<boolean>(false);
   const [sidebarWidth, setSidebarWidth] = useState<number>(516);
+  const [sidebarHeight, setSidebarHeight] = useState<number>(300); // Default height for mobile
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);
   const isResizing = useRef(false);
+  const resizeHandleRef = useRef<HTMLDivElement>(null);
 
+  // Detect mobile viewport
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Attach non-passive touch listener for resize handle
+  React.useEffect(() => {
+    const handle = resizeHandleRef.current;
+    if (handle) {
+      const onTouchStart = (e: TouchEvent) => startResizing(e as any);
+      handle.addEventListener('touchstart', onTouchStart, { passive: false });
+      return () => {
+        handle.removeEventListener('touchstart', onTouchStart);
+      };
+    }
+  }, [isMobile]); // Re-run when layout changes (handle ref changes)
 
   const handleCancel = () => {
     // Wenn activeTurbine eine Turbine enthält, übergebe deren ID an cancelEdit
@@ -52,18 +75,61 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
   const handleMouseEnter = () => setShowBtns(true);
   const handleMouseLeave = () => setShowBtns(false);
 
-  const startResizing = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const startResizing = (e: any) => {
+    // Prevent default browser behavior to avoid text selection or scrolling initiation
+    if (e.cancelable && (e.type === 'mousedown' || e.type === 'touchstart')) {
+      e.preventDefault();
+    }
+    
     isResizing.current = true;
+    
     document.addEventListener('mousemove', resizeSidebar);
     document.addEventListener('mouseup', stopResizing);
+    
+    // Add touch event listeners for resizing
+    // passive: false is critical to allow preventDefault inside the handler if needed
+    document.addEventListener('touchmove', resizeSidebarTouch, { passive: false });
+    document.addEventListener('touchend', stopResizing);
   };
 
   const resizeSidebar = (e: MouseEvent) => {
     if (!isResizing.current) return;
-    const newWidth = window.innerWidth - e.clientX;
-    if (newWidth >= 300 && newWidth <= window.innerWidth * 0.75) {
-      setSidebarWidth(newWidth);
+    
+    if (isMobile) {
+      // Mobile: resize height (drag vertical)
+      const newHeight = window.innerHeight - e.clientY;
+      if (newHeight >= 100 && newHeight <= window.innerHeight * 0.9) {
+        setSidebarHeight(newHeight);
+      }
+    } else {
+      // Desktop: resize width (drag horizontal)
+      const newWidth = window.innerWidth - e.clientX;
+      if (newWidth >= 40 && newWidth <= window.innerWidth * 0.95) {
+        setSidebarWidth(newWidth);
+      }
+    }
+  };
+
+  const resizeSidebarTouch = (e: TouchEvent) => {
+    if (!isResizing.current) return;
+    
+    // Prevent scrolling while resizing
+    if (e.cancelable) e.preventDefault();
+    
+    const touch = e.touches[0];
+    
+    if (isMobile) {
+      // Mobile: resize height (drag vertical)
+      const newHeight = window.innerHeight - touch.clientY;
+      if (newHeight >= 100 && newHeight <= window.innerHeight * 0.9) {
+        setSidebarHeight(newHeight);
+      }
+    } else {
+      // Desktop: resize width (drag horizontal)
+      const newWidth = window.innerWidth - touch.clientX;
+      if (newWidth >= 40 && newWidth <= window.innerWidth * 0.95) {
+        setSidebarWidth(newWidth);
+      }
     }
   };
 
@@ -71,11 +137,65 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
     isResizing.current = false;
     document.removeEventListener('mousemove', resizeSidebar);
     document.removeEventListener('mouseup', stopResizing);
+    
+    // Remove touch event listeners
+    document.removeEventListener('touchmove', resizeSidebarTouch);
+    document.removeEventListener('touchend', stopResizing);
+  };
+
+  const desktopStyle: React.CSSProperties = {
+      width: sidebarWidth,
+      position: 'relative',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column', 
+      alignItems: 'center',
+      transition: 'none',
+      borderLeft: '1px solid #ccc',
+      backgroundColor: '#363636'
+  };
+
+  const mobileStyle: React.CSSProperties = {
+      width: '100vw',
+      height: sidebarHeight,
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: '#363636',
+      borderTop: '1px solid #ccc',
+      boxShadow: '0 -2px 10px rgba(0,0,0,0.5)',
+      transition: 'none'
   };
 
   return (
-    <div className="sidebar-container" style={{ width: sidebarWidth, position: 'relative' }}>
-      <div className="sidebar-btn-container" style={{ flexDirection: 'row', gap: '5%', width: '80%' }}>
+    <div className="sidebar-container" style={isMobile ? mobileStyle : desktopStyle}>
+     {isMobile && (
+        <div
+          className='resize-handle-mobile'
+          ref={resizeHandleRef}
+          onMouseDown={startResizing}
+          style={{
+            width: '100%',
+            height: '24px',
+            minHeight: '24px',
+            cursor: 'row-resize',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#2b2b2b',
+            borderTopLeftRadius: '8px', 
+            borderTopRightRadius: '8px'
+          }}
+        >
+          <div style={{ width: '40px', height: '4px', backgroundColor: '#666', borderRadius: '2px' }}></div>
+        </div>
+      )}
+      
+      <div className="sidebar-btn-container" style={{ flexDirection: 'row', gap: '5%', width: '80%', marginTop: '15px' }}>
         {(<button
           className={`sidebar-button shown ${placementMode === PlacementModes.Turbine ? 'active' : ''}`}
           onClick={() => setPlacementMode(PlacementModes.Turbine)}
@@ -96,43 +216,69 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
         </button>)}
       </div>
       <hr style={{ width: '100%' }} />
-      <div className="sidebar-btn-container" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div 
+        className="sidebar-btn-container" 
+        onMouseEnter={handleMouseEnter} 
+        onMouseLeave={handleMouseLeave}
+        style={isMobile ? { 
+          flexDirection: 'row', 
+          overflowX: 'auto', 
+          justifyContent: 'flex-start', 
+          gap: '10px', 
+          width: '95%',
+          padding: '10px',
+          minHeight: '60px',
+          alignItems: 'center'
+        } : {}}
+      >
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Toolbar ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Toolbar)}
+          style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
-          Turbinen - Import/Export
+          Tools
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.TurbineTypes ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.TurbineTypes)}
+          style={isMobile ? { minWidth: '140px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
-          Liste Turbinentypen
+          Turbinen-Arten
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewTurbine || mode === Modes.EditTurbine) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.NewTurbine)}
+          style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Neue Turbine
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.GroundAreas) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.GroundAreas)}
+          style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Ground Areas
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${(mode === Modes.NewMast || mode === Modes.EditMast) ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.NewMast)}
+          style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Neuer Mast
         </button>)}
         {(<button
           className={`sidebar-button ${showBtns ? 'shown' : ''} ${mode === Modes.Calculate ? 'shown active' : ''}`}
           onClick={() => setMode(Modes.Calculate)}
+          style={isMobile ? { minWidth: '130px', width: 'auto', height: '40px', fontSize: '16px' } : {}}
         >
           Berechnen
         </button>)}
+        
+        {!isMobile && !showBtns && (
+          <div className="more-tabs-hint">
+            ▼
+          </div>
+        )}
       </div>
       <hr style={{ margin: '0 0 15px 0', width: '100%' }} />
       <div className='tab-container'>
@@ -233,12 +379,16 @@ const Sidebar: React.FC<SidebarProps> = ({ turbines, setTurbines, turbineTypes, 
           />
         )}
       </div>
+      {!isMobile && (
       <div
         className='resize-handle'
+        ref={resizeHandleRef}
         onMouseDown={startResizing}
+        style={{ cursor: 'col-resize' }}
       >
         |||
       </div>
+      )}
     </div>
   );
 };

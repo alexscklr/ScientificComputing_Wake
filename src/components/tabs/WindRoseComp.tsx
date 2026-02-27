@@ -87,7 +87,7 @@ const WindRoseComp: React.FC<WindRoseCompProps> = ({ windroseData, setWindroseDa
   const changeSpeedUnit = (newUnit: string) => {
     if (!windroseData || windroseData.speedUnit === newUnit) return;
 
-    let newSpeedBins: [number, number][] = windroseData.speedBins.map(([v1, v2]) => [
+    const newSpeedBins: [number, number][] = windroseData.speedBins.map(([v1, v2]) => [
       Math.round(convertSpeedUnits(v1, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
       isNaN(v2) ? NaN : Math.round(convertSpeedUnits(v2, windroseData.speedUnit, newUnit as SpeedUnits) * 100) / 100,
     ])

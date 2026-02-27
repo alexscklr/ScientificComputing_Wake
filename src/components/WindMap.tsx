@@ -277,15 +277,25 @@ const WindMap: React.FC<WindMapProps> = ({
             icon={turbine.available ? (isTurbineActive ? windTurbineIcon('green') : windTurbineIcon('red')) : windTurbineIcon('grey')}
             draggable={true}
             eventHandlers={{
+              // Support both mouse and touch start events.
               mousedown: (e) => {
-                shiftDragRef.current = (e.originalEvent as MouseEvent).ctrlKey;
+                L.DomEvent.stopPropagation(e as any);
+                const me = e as L.LeafletMouseEvent;
+                shiftDragRef.current = !!me.originalEvent.ctrlKey;
+              },
+              touchstart: (e) => {
+                L.DomEvent.stopPropagation(e as any);
+                const te = e as L.LeafletMouseEvent;
+                shiftDragRef.current = !!(te.originalEvent as any).ctrlKey;
               },
               dragend: (e) => {
                 const { lat, lng } = e.target.getLatLng();
                 onDragTurbine(turbine.id, lat, lng, shiftDragRef.current);
               },
               click: (e) => {
-                onEditTurbine(turbine.id, (e.originalEvent as MouseEvent).ctrlKey);
+                L.DomEvent.stopPropagation(e as any);
+                const me = e as L.LeafletMouseEvent;
+                onEditTurbine(turbine.id, !!me.originalEvent.ctrlKey);
               },
             }}
           >
@@ -320,14 +330,23 @@ const WindMap: React.FC<WindMapProps> = ({
             draggable={true}
             eventHandlers={{
               mousedown: (e) => {
-                shiftDragRef.current = (e.originalEvent as MouseEvent).ctrlKey;
+                L.DomEvent.stopPropagation(e as any);
+                const me = e as L.LeafletMouseEvent; 
+                shiftDragRef.current = !!me.originalEvent.ctrlKey;
+              },
+              touchstart: (e) => {
+                L.DomEvent.stopPropagation(e as any);
+                const te = e as L.LeafletMouseEvent; 
+                shiftDragRef.current = !!(te.originalEvent as any).ctrlKey;
               },
               dragend: (e) => {
                 const { lat, lng } = e.target.getLatLng();
                 onDragMast(mast.id, lat, lng, shiftDragRef.current);
               },
               click: (e) => {
-                onEditMast(mast.id, (e.originalEvent as MouseEvent).ctrlKey);
+                L.DomEvent.stopPropagation(e as any);
+                const me = e as L.LeafletMouseEvent;
+                onEditMast(mast.id, !!me.originalEvent.ctrlKey);
               },
             }}
           >

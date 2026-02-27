@@ -81,8 +81,8 @@ const TurbineForm: React.FC<TurbineFormProps> = ({ id, lat, long, name, type, gr
 
     for (let r = 0; r < layoutData.rows; r++) {
       for (let c = 0; c < layoutData.columns; c++) {
-        let x = (c - (layoutData.columns - 1) / 2) * layoutData.spacing;
-        let y = (r - (layoutData.rows - 1) / 2) * layoutData.spacing;
+        const x = (c - (layoutData.columns - 1) / 2) * layoutData.spacing;
+        const y = (r - (layoutData.rows - 1) / 2) * layoutData.spacing;
 
         const rotatedX = x * Math.cos(rad) - y * Math.sin(rad);
         const rotatedY = x * Math.sin(rad) + y * Math.cos(rad);

@@ -81,8 +81,12 @@ const Toolbar: React.FC<Props> = ({
         setGroundAreas(areasData);
         setTurbineTypes(turbineTypesData);
 
-      } catch (err: any) {
-        alert(`⚠️ Fehler beim Laden der Datei:  ${err.message}`);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          alert(`⚠️ Fehler beim Laden der Datei:  ${err.message}`);
+        } else {
+          alert('⚠️ Fehler beim Laden der Datei: Unbekannter Fehler');
+        }
       }
     };
     reader.readAsText(file);
